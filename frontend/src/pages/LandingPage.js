@@ -98,7 +98,7 @@ const LandingPage = () => {
               <Button
                 data-testid="hero-get-started-button"
                 onClick={() => navigate('/analyze')}
-                className="bg-blue-600 text-white hover:bg-blue-700 rounded-lg px-8 py-6 text-lg font-semibold transition-all hover:shadow-lg"
+                className="bg-blue-900 text-white hover:bg-blue-800 rounded-lg px-8 py-6 text-lg font-semibold transition-all hover:shadow-lg"
               >
                 Get Started Free
                 <ArrowRight className="ml-2 w-5 h-5" />
