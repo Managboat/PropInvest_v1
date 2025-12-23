@@ -433,8 +433,11 @@ const ResultsPage = () => {
                       <p className="text-blue-100 mb-6 text-sm">
                         Unlock detailed implementation plans and financial projections
                       </p>
-                      <Button className="bg-white text-blue-900 hover:bg-gray-100 font-semibold">
-                        Upgrade to Access
+                      <Button 
+                        className="bg-white text-blue-900 hover:bg-gray-100 font-semibold"
+                        onClick={() => navigate('/pricing')}
+                      >
+                        View Pricing Plans
                       </Button>
                     </div>
                   )}
