@@ -325,9 +325,11 @@ Consider:
     roi_optimistic = (total_gain_optimistic / total_upfront) * 100
     
     # ROE = Annual Net Income / Equity * 100
-    # Equity = Down payment (not total upfront, as upfront includes taxes and fees which don't build equity)
-    roe_conservative = (annual_net_cashflow_conservative / down_payment) * 100
-    roe_optimistic = (annual_net_cashflow_optimistic / down_payment) * 100
+    # For cash purchase: equity = total price
+    # For mortgage: equity = down payment
+    equity = down_payment if down_payment > 0 else price
+    roe_conservative = (annual_net_cashflow_conservative / equity) * 100
+    roe_optimistic = (annual_net_cashflow_optimistic / equity) * 100
     
     # 5-year projection
     projected_5yr_value = price * ((1 + yoy_appreciation/100) ** 5)
