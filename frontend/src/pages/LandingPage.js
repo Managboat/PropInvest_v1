@@ -199,10 +199,10 @@ const LandingPage = () => {
           className="text-center mb-12"
         >
           <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
-            Everything You Need
+            Tutto Ciò di Cui Hai Bisogno
           </h2>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Professional-grade tools for smarter investment decisions
+            Strumenti professionali per investimenti più intelligenti
           </p>
         </motion.div>
 
