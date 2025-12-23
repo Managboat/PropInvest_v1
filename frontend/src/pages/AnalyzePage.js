@@ -504,7 +504,7 @@ const AnalyzePage = () => {
                         onClick={() => setStep(1)}
                         className="flex-1 h-12 text-slate-700 border-slate-300 hover:bg-slate-50"
                       >
-                        Back to Property Details
+                        Indietro ai Dettagli
                       </Button>
                       <Button
                         data-testid="analyze-final-button"
@@ -515,10 +515,10 @@ const AnalyzePage = () => {
                         {loading ? (
                           <>
                             <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                            Analyzing...
+                            Analisi in corso...
                           </>
                         ) : (
-                          'Complete Analysis'
+                          'Completa Analisi'
                         )}
                       </Button>
                     </div>
