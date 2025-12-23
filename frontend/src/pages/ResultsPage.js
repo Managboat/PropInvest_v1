@@ -83,7 +83,7 @@ const ResultsPage = () => {
                 className="text-slate-600 hover:text-slate-900"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                New Analysis
+                Nuova Analisi
               </Button>
             </div>
             <Button
@@ -93,7 +93,7 @@ const ResultsPage = () => {
               className="bg-blue-900 text-white hover:bg-blue-800"
             >
               <Save className="w-4 h-4 mr-2" />
-              Save to Portfolio
+              Salva in Portfolio
             </Button>
           </div>
         </div>
