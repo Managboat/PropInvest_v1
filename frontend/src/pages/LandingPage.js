@@ -159,7 +159,7 @@ const LandingPage = () => {
           >
             <div className="relative h-full min-h-[500px] rounded-2xl overflow-hidden shadow-2xl">
               <img
-                src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80"
+                src="https://customer-assets.emergentagent.com/job_smart-realty-16/artifacts/3zzjo9cb_88c21b63007714b6001c31681cbb1eb0.jpg"
                 alt="Luxury property Porto Cervo"
                 className="w-full h-full object-cover"
               />
