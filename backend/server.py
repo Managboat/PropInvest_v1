@@ -364,6 +364,22 @@ Provide a concise analysis (3-4 sentences) covering:
 async def root():
     return {"message": "Real Estate Investment Calculator API", "version": "1.0"}
 
+@api_router.post("/extract-property")
+async def extract_property_endpoint(property_input: PropertyInput):
+    """
+    Extract property data from URL
+    """
+    try:
+        if not property_input.url:
+            raise HTTPException(status_code=400, detail="URL is required")
+        
+        extracted_data = extract_property_from_url(property_input.url)
+        return extracted_data
+        
+    except Exception as e:
+        logging.error(f"Error extracting property: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @api_router.post("/analyze", response_model=AnalysisResult)
 async def analyze_property(property_input: PropertyInput):
     """
