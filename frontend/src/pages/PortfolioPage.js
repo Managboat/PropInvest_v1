@@ -136,6 +136,12 @@ const PortfolioPage = () => {
                       )}
 
                       <CardHeader>
+                        <div className="flex items-center justify-between mb-2">
+                          <Badge className="bg-slate-100 text-slate-800 border-slate-200 font-semibold">
+                            {propertyData.property_type}
+                          </Badge>
+                          <span className="text-sm text-slate-500">{propertyData.size_sqm} sqm</span>
+                        </div>
                         <CardTitle className="text-lg font-bold line-clamp-2 text-slate-900 group-hover:text-blue-900 transition-colors">
                           {propertyData.title}
                         </CardTitle>
@@ -146,19 +152,14 @@ const PortfolioPage = () => {
                       </CardHeader>
                       
                       <CardContent className="space-y-4">
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-slate-600">{propertyData.size_sqm} sqm</span>
-                          <span className="text-slate-600">{propertyData.property_type}</span>
-                        </div>
-
                         <div className="grid grid-cols-2 gap-3">
-                          <div className="bg-blue-50 rounded-lg p-3">
-                            <div className="text-xs text-slate-600 mb-1">ROI</div>
-                            <div className="font-bold text-blue-900">{metrics.roi}%</div>
+                          <div className="bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-3 text-white">
+                            <div className="text-xs text-blue-100 mb-1">ROI</div>
+                            <div className="text-2xl font-bold">{metrics.roi}%</div>
                           </div>
-                          <div className="bg-green-50 rounded-lg p-3">
-                            <div className="text-xs text-slate-600 mb-1">Yield</div>
-                            <div className="font-bold text-green-700">
+                          <div className="bg-gradient-to-br from-slate-700 to-slate-600 rounded-lg p-3 text-white">
+                            <div className="text-xs text-slate-200 mb-1">Yield</div>
+                            <div className="text-2xl font-bold">
                               {metrics.long_term_rental_yield}%
                             </div>
                           </div>
@@ -171,8 +172,8 @@ const PortfolioPage = () => {
 
                         {/* Review/AI Insight Preview */}
                         {analysis.ai_insights && (
-                          <div className="bg-slate-50 rounded-lg p-3 text-xs text-slate-600 line-clamp-2">
-                            {analysis.ai_insights}
+                          <div className="bg-blue-50 rounded-lg p-3 text-xs text-slate-700 line-clamp-2 italic">
+                            "{analysis.ai_insights}"
                           </div>
                         )}
                       </CardContent>
