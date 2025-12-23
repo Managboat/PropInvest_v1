@@ -143,10 +143,10 @@ const AnalyzePage = () => {
         >
           <div className="text-center space-y-4">
             <h1 className="text-4xl md:text-5xl font-bold text-slate-900">
-              Analyze a Property
+              Analizza una Proprietà
             </h1>
             <p className="text-lg text-slate-600">
-              {step === 1 ? 'Step 1: Property Details' : 'Step 2: Purchase & Financing'}
+              {step === 1 ? 'Passo 1: Dettagli Proprietà' : 'Passo 2: Acquisto e Finanziamento'}
             </p>
           </div>
 
