@@ -272,11 +272,6 @@ async def calculate_metrics(property_data: PropertyData, purchase_details: Purch
         cash_on_cash_return=round(roe_conservative, 2),
         monthly_cash_flow=round(annual_net_cashflow / 12, 2)
     )
-        projected_5yr_value=round(projected_5yr_value, 2),
-        cash_on_cash_return=round(cash_on_cash, 2),
-        cap_rate=round(cap_rate, 2),
-        monthly_cash_flow=round(monthly_cash_flow, 2)
-    )
 
 async def generate_strategies(property_data: PropertyData, metrics: InvestmentMetrics) -> List[InvestmentStrategy]:
     """Generate 4 risk-based investment strategies"""
