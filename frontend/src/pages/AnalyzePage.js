@@ -189,7 +189,7 @@ const AnalyzePage = () => {
                           className="data-[state=active]:bg-blue-900 data-[state=active]:text-white text-slate-700"
                         >
                           <Link2 className="w-4 h-4 mr-2" />
-                          URL Import
+                          Importa URL
                         </TabsTrigger>
                         <TabsTrigger 
                           value="manual" 
@@ -197,13 +197,13 @@ const AnalyzePage = () => {
                           className="data-[state=active]:bg-blue-900 data-[state=active]:text-white text-slate-700"
                         >
                           <FileInput className="w-4 h-4 mr-2" />
-                          Manual Entry
+                          Inserimento Manuale
                         </TabsTrigger>
                       </TabsList>
 
                       <TabsContent value="url" className="space-y-6">
                         <div className="space-y-2">
-                          <Label htmlFor="url" className="text-slate-900">Property URL</Label>
+                          <Label htmlFor="url" className="text-slate-900">URL Proprietà</Label>
                           <Input
                             id="url"
                             data-testid="url-input"
@@ -214,7 +214,7 @@ const AnalyzePage = () => {
                             className="h-12 border-slate-300"
                           />
                           <p className="text-sm text-slate-500">
-                            Paste a link from immobiliare.it
+                            Incolla un link da immobiliare.it
                           </p>
                         </div>
 
@@ -238,11 +238,11 @@ const AnalyzePage = () => {
                       <TabsContent value="manual" className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="md:col-span-2 space-y-2">
-                            <Label htmlFor="title" className="text-slate-900">Property Title *</Label>
+                            <Label htmlFor="title" className="text-slate-900">Titolo Proprietà *</Label>
                             <Input
                               id="title"
                               data-testid="title-input"
-                              placeholder="e.g., Charming Apartment in Milan"
+                              placeholder="es. Appartamento a Milano"
                               value={manualData.title}
                               onChange={(e) => setManualData({ ...manualData, title: e.target.value })}
                               className="border-slate-300"
@@ -250,11 +250,11 @@ const AnalyzePage = () => {
                           </div>
 
                           <div className="space-y-2">
-                            <Label htmlFor="location" className="text-slate-900">Location *</Label>
+                            <Label htmlFor="location" className="text-slate-900">Località *</Label>
                             <Input
                               id="location"
                               data-testid="location-input"
-                              placeholder="Milan, Lombardy"
+                              placeholder="Milano, Lombardia"
                               value={manualData.location}
                               onChange={(e) => setManualData({ ...manualData, location: e.target.value })}
                               className="border-slate-300"
@@ -262,7 +262,7 @@ const AnalyzePage = () => {
                           </div>
 
                           <div className="space-y-2">
-                            <Label htmlFor="price" className="text-slate-900">Price (€) *</Label>
+                            <Label htmlFor="price" className="text-slate-900">Prezzo (€) *</Label>
                             <Input
                               id="price"
                               data-testid="price-input"
@@ -275,7 +275,7 @@ const AnalyzePage = () => {
                           </div>
 
                           <div className="space-y-2">
-                            <Label htmlFor="size" className="text-slate-900">Size (sqm) *</Label>
+                            <Label htmlFor="size" className="text-slate-900">Superficie (mq) *</Label>
                             <Input
                               id="size"
                               data-testid="size-input"
@@ -288,7 +288,7 @@ const AnalyzePage = () => {
                           </div>
 
                           <div className="space-y-2">
-                            <Label htmlFor="rooms" className="text-slate-900">Rooms</Label>
+                            <Label htmlFor="rooms" className="text-slate-900">Locali</Label>
                             <Input
                               id="rooms"
                               data-testid="rooms-input"
@@ -301,7 +301,7 @@ const AnalyzePage = () => {
                           </div>
 
                           <div className="space-y-2">
-                            <Label htmlFor="bathrooms" className="text-slate-900">Bathrooms</Label>
+                            <Label htmlFor="bathrooms" className="text-slate-900">Bagni</Label>
                             <Input
                               id="bathrooms"
                               data-testid="bathrooms-input"
@@ -314,7 +314,7 @@ const AnalyzePage = () => {
                           </div>
 
                           <div className="space-y-2">
-                            <Label htmlFor="type" className="text-slate-900">Property Type</Label>
+                            <Label htmlFor="type" className="text-slate-900">Tipo Immobile</Label>
                             <select
                               id="type"
                               data-testid="property-type-select"
@@ -338,7 +338,7 @@ const AnalyzePage = () => {
                               onChange={(e) => setManualData({ ...manualData, renovation_needed: e.target.checked })}
                               className="w-4 h-4 accent-blue-900"
                             />
-                            <Label htmlFor="renovation" className="cursor-pointer text-slate-900">Property needs renovation</Label>
+                            <Label htmlFor="renovation" className="cursor-pointer text-slate-900">Necessita ristrutturazione</Label>
                           </div>
                         </div>
 
@@ -347,7 +347,7 @@ const AnalyzePage = () => {
                           onClick={handleContinueToFinancing}
                           className="w-full bg-blue-900 text-white hover:bg-blue-800 h-12 text-base font-semibold"
                         >
-                          Continue to Financing
+                          Continua al Finanziamento
                         </Button>
                       </TabsContent>
                     </Tabs>

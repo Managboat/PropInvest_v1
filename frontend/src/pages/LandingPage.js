@@ -63,14 +63,14 @@ const LandingPage = () => {
                 onClick={() => navigate('/pricing')}
                 className="text-slate-700 hover:text-slate-900 font-medium"
               >
-                Pricing
+                Piani
               </Button>
               <Button 
                 data-testid="nav-analyze-button"
                 onClick={() => navigate('/analyze')}
                 className="bg-blue-900 text-white hover:bg-blue-800 rounded-lg px-6 py-5 font-medium transition-all"
               >
-                Start Analysis
+                Inizia Analisi
               </Button>
             </motion.div>
           </div>
