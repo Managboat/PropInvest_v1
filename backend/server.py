@@ -296,17 +296,32 @@ Consider:
     annual_rent_conservative = monthly_rent_conservative * 12
     annual_rent_optimistic = monthly_rent_optimistic * 12
     
+    # Cash flow calculation (rental income - all expenses)
     annual_net_cashflow_conservative = annual_rent_conservative - annual_costs
     annual_net_cashflow_optimistic = annual_rent_optimistic - annual_costs
     annual_net_cashflow = (annual_net_cashflow_conservative + annual_net_cashflow_optimistic) / 2
     
-    # ROI range (5 years)
-    roi_conservative = ((annual_net_cashflow_conservative * 5) / total_upfront) * 100
-    roi_optimistic = ((annual_net_cashflow_optimistic * 5) / total_upfront) * 100
+    # Calculate total profit over 5 years including appreciation
+    capital_appreciation_5yr = price * ((1 + yoy_appreciation/100) ** 5) - price
     
-    # ROE range  
-    roe_conservative = (annual_net_cashflow_conservative / total_upfront) * 100
-    roe_optimistic = (annual_net_cashflow_optimistic / total_upfront) * 100
+    # Total return = cumulative cash flow + capital appreciation - total interest paid
+    total_interest_paid_5yr = (monthly_mortgage * 12 * 5) - (mortgage_amount * (1 - (1 / ((1 + monthly_rate) ** (num_payments - 60)))) if num_payments > 60 else 0)
+    
+    cumulative_cashflow_conservative_5yr = annual_net_cashflow_conservative * 5
+    cumulative_cashflow_optimistic_5yr = annual_net_cashflow_optimistic * 5
+    
+    # ROI = (Total Gains - Initial Investment) / Initial Investment * 100
+    # Total Gains = Cumulative cash flow + Capital appreciation
+    total_gain_conservative = cumulative_cashflow_conservative_5yr + capital_appreciation_5yr
+    total_gain_optimistic = cumulative_cashflow_optimistic_5yr + capital_appreciation_5yr
+    
+    roi_conservative = (total_gain_conservative / total_upfront) * 100
+    roi_optimistic = (total_gain_optimistic / total_upfront) * 100
+    
+    # ROE = Annual Net Income / Equity * 100
+    # Equity = Down payment (not total upfront, as upfront includes taxes and fees which don't build equity)
+    roe_conservative = (annual_net_cashflow_conservative / down_payment) * 100
+    roe_optimistic = (annual_net_cashflow_optimistic / down_payment) * 100
     
     # 5-year projection
     projected_5yr_value = price * ((1 + yoy_appreciation/100) ** 5)
