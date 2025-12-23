@@ -80,14 +80,14 @@ const LandingPage = () => {
             className="space-y-6"
           >
             <div className="inline-block">
-              <span className="text-xs font-semibold uppercase tracking-wider text-blue-600 bg-blue-50 px-4 py-2 rounded-full">
+              <span className="text-xs font-semibold uppercase tracking-wider text-blue-900 bg-blue-50 px-4 py-2 rounded-full">
                 Investment Intelligence
               </span>
             </div>
             
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-slate-900 leading-tight">
               Smarter Real Estate
-              <span className="block text-blue-600">Investment Decisions</span>
+              <span className="block text-blue-900">Investment Decisions</span>
             </h1>
             
             <p className="text-lg md:text-xl text-slate-600 leading-relaxed">
