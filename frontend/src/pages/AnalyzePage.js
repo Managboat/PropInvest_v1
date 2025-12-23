@@ -406,12 +406,14 @@ const AnalyzePage = () => {
                         <Label className="text-slate-900">Mortgage Financing (%)</Label>
                         <Input
                           type="number"
+                          min="0"
+                          max="100"
                           placeholder="80"
                           value={purchaseDetails.mortgage_percentage}
                           onChange={(e) => setPurchaseDetails({...purchaseDetails, mortgage_percentage: e.target.value})}
                           className="border-slate-300"
                         />
-                        <p className="text-xs text-slate-500">Percentage of price financed by mortgage</p>
+                        <p className="text-xs text-slate-500">Set to 0 for cash purchase (no mortgage)</p>
                       </div>
 
                       <div className="space-y-2">
