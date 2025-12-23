@@ -133,7 +133,7 @@ const PricingPage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.1 }}
             >
-              <Card className={`border-gray-200 hover:shadow-2xl transition-all h-full flex flex-col relative overflow-hidden ${
+              <Card className={`border-gray-200 bg-white hover:shadow-2xl transition-all h-full flex flex-col relative overflow-hidden ${
                 plan.badge ? 'ring-2 ring-blue-900' : ''
               }`}>
                 {plan.badge && (
