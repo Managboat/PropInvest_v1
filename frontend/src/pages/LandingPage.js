@@ -19,23 +19,23 @@ const LandingPage = () => {
   const features = [
     {
       icon: <BarChart3 className="w-6 h-6" />,
-      title: "AI-Powered Valuation",
-      description: "Advanced algorithms analyze market data to estimate property values with precision"
+      title: "Valutazione AI",
+      description: "Algoritmi avanzati analizzano i dati di mercato per stimare il valore con precisione"
     },
     {
       icon: <TrendingUp className="w-6 h-6" />,
-      title: "Investment Metrics",
-      description: "ROI, ROE, cap rates, rental yields, and appreciation projections"
+      title: "Metriche Investimento",
+      description: "ROI, ROE, cash flow e proiezioni di apprezzamento a portata di mano"
     },
     {
       icon: <Shield className="w-6 h-6" />,
-      title: "Risk-Based Strategies",
-      description: "4 tailored strategies from conservative holds to aggressive flips"
+      title: "Strategie Basate sul Rischio",
+      description: "4 strategie personalizzate da hold conservativi a flip aggressivi"
     },
     {
       icon: <Sparkles className="w-6 h-6" />,
-      title: "Market Insights",
-      description: "Real-time analysis of Italian property markets and opportunities"
+      title: "Insights di Mercato",
+      description: "Analisi in tempo reale dei mercati immobiliari italiani e opportunità"
     }
   ];
 
