@@ -413,11 +413,11 @@ const AnalyzePage = () => {
                           onChange={(e) => setPurchaseDetails({...purchaseDetails, mortgage_percentage: e.target.value})}
                           className="border-slate-300"
                         />
-                        <p className="text-xs text-slate-500">Set to 0 for cash purchase (no mortgage)</p>
+                        <p className="text-xs text-slate-500">Imposta a 0 per acquisto in contanti (senza mutuo)</p>
                       </div>
 
                       <div className="space-y-2">
-                        <Label className="text-slate-900">Mortgage Interest Rate (%)</Label>
+                        <Label className="text-slate-900">Tasso Interesse Mutuo (%)</Label>
                         <Input
                           type="number"
                           step="0.1"
