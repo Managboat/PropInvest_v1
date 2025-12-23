@@ -178,7 +178,7 @@ const ResultsPage = () => {
           <Card className={`border-gray-200 shadow-xl overflow-hidden bg-gradient-to-br ${getScoreColor(metrics.investment_score)}`}>
             <CardContent className="p-8 md:p-12 text-center">
               <div className="text-white/80 text-sm font-semibold uppercase tracking-wider mb-2">
-                Investment Quality Score
+                Punteggio Qualità Investimento
               </div>
               <div className="text-7xl md:text-8xl font-bold text-white mb-4">
                 {metrics.investment_score}<span className="text-4xl">/10</span>
@@ -190,10 +190,10 @@ const ResultsPage = () => {
               {/* Score scale indicator */}
               <div className="mt-8 max-w-md mx-auto">
                 <div className="flex justify-between text-xs text-white/70 mb-2">
-                  <span>Poor</span>
-                  <span>Fair</span>
-                  <span>Good</span>
-                  <span>Excellent</span>
+                  <span>Scarso</span>
+                  <span>Discreto</span>
+                  <span>Buono</span>
+                  <span>Eccellente</span>
                 </div>
                 <div className="h-2 bg-white/20 rounded-full overflow-hidden">
                   <div 
