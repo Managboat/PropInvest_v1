@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Save, Building2, MapPin, Home } from 'lucide-react';
+import { ArrowLeft, Save, Building2, MapPin, Home, TrendingUp, Euro, Calendar } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
@@ -50,6 +50,21 @@ const ResultsPage = () => {
     }
   };
 
+  // Get color based on investment score (1-10)
+  const getScoreColor = (score) => {
+    if (score >= 8) return 'from-blue-600 to-blue-700'; // Excellent
+    if (score >= 6) return 'from-blue-500 to-slate-600'; // Good
+    if (score >= 4) return 'from-slate-600 to-slate-700'; // Fair
+    return 'from-slate-700 to-slate-800'; // Poor
+  };
+
+  const getScoreLabel = (score) => {
+    if (score >= 8) return 'Excellent Investment';
+    if (score >= 6) return 'Good Investment';
+    if (score >= 4) return 'Fair Investment';
+    return 'Risky Investment';
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navigation */}
@@ -91,7 +106,7 @@ const ResultsPage = () => {
           animate={{ opacity: 1, y: 0 }}
           data-testid="property-header"
         >
-          <Card className="border-gray-200 shadow-lg overflow-hidden">
+          <Card className="border-gray-200 shadow-lg overflow-hidden bg-white">
             {property_data.image_url && (
               <div className="h-64 md:h-96 w-full relative">
                 <img
@@ -145,128 +160,171 @@ const ResultsPage = () => {
                     <div className="text-xl font-bold text-slate-900">{property_data.bathrooms}</div>
                   </div>
                 )}
-                {property_data.monthly_expenses && (
-                  <div className="space-y-1">
-                    <div className="text-sm text-slate-600">Monthly Expenses</div>
-                    <div className="text-xl font-bold text-slate-900">€{property_data.monthly_expenses.toFixed(0)}</div>
-                  </div>
-                )}
+                <div className="space-y-1">
+                  <div className="text-sm text-slate-600">Type</div>
+                  <div className="text-xl font-bold text-slate-900">{property_data.property_type}</div>
+                </div>
               </div>
             </CardContent>
           </Card>
         </motion.div>
 
-        {/* Investment Metrics */}
+        {/* Investment Score - HERO METRIC */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
+          <Card className={`border-gray-200 shadow-xl overflow-hidden bg-gradient-to-br ${getScoreColor(metrics.investment_score)}`}>
+            <CardContent className="p-8 md:p-12 text-center">
+              <div className="text-white/80 text-sm font-semibold uppercase tracking-wider mb-2">
+                Investment Quality Score
+              </div>
+              <div className="text-7xl md:text-8xl font-bold text-white mb-4">
+                {metrics.investment_score}<span className="text-4xl">/10</span>
+              </div>
+              <div className="text-xl md:text-2xl font-semibold text-white/90">
+                {getScoreLabel(metrics.investment_score)}
+              </div>
+              
+              {/* Score scale indicator */}
+              <div className="mt-8 max-w-md mx-auto">
+                <div className="flex justify-between text-xs text-white/70 mb-2">
+                  <span>Poor</span>
+                  <span>Fair</span>
+                  <span>Good</span>
+                  <span>Excellent</span>
+                </div>
+                <div className="h-2 bg-white/20 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-white rounded-full transition-all duration-500"
+                    style={{ width: `${metrics.investment_score * 10}%` }}
+                  ></div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Key Investment Metrics */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
           <div className="mb-6">
-            <h2 className="text-3xl font-bold text-slate-900 mb-2">Investment Metrics</h2>
-            <p className="text-slate-600">Comprehensive financial analysis and projections</p>
+            <h2 className="text-3xl font-bold text-slate-900 mb-2">Financial Analysis</h2>
+            <p className="text-slate-600">Key metrics based on your purchase configuration</p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {/* ROI */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* ROI Range */}
             <Card data-testid="metric-roi" className="border-gray-200 hover:shadow-lg transition-shadow bg-white">
               <CardHeader className="pb-3">
-                <CardDescription className="text-slate-600">Return on Investment</CardDescription>
+                <CardDescription className="text-slate-600 flex items-center gap-2">
+                  <TrendingUp className="w-4 h-4" />
+                  Return on Investment (5 years)
+                </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="text-4xl font-bold text-blue-900">{metrics.roi}%</div>
-                <div className="h-2 bg-gray-200 rounded-full mt-3 overflow-hidden">
-                  <div 
-                    className="h-full bg-blue-600 rounded-full"
-                    style={{ width: `${Math.min(metrics.roi, 100)}%` }}
-                  ></div>
+                <div className="text-4xl font-bold text-blue-900 mb-2">
+                  {metrics.roi_range_min}% - {metrics.roi_range_max}%
+                </div>
+                <div className="text-sm text-slate-600">
+                  Scenario range: worst to best case
                 </div>
               </CardContent>
             </Card>
 
-            {/* ROE */}
+            {/* ROE Range */}
             <Card data-testid="metric-roe" className="border-gray-200 hover:shadow-lg transition-shadow bg-white">
               <CardHeader className="pb-3">
-                <CardDescription className="text-slate-600">Return on Equity</CardDescription>
+                <CardDescription className="text-slate-600 flex items-center gap-2">
+                  <TrendingUp className="w-4 h-4" />
+                  Return on Equity (Annual)
+                </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="text-4xl font-bold text-blue-900">{metrics.roe}%</div>
-                <div className="h-2 bg-gray-200 rounded-full mt-3 overflow-hidden">
-                  <div 
-                    className="h-full bg-blue-600 rounded-full"
-                    style={{ width: `${Math.min(metrics.roe, 100)}%` }}
-                  ></div>
+                <div className="text-4xl font-bold text-blue-900 mb-2">
+                  {metrics.roe_range_min}% - {metrics.roe_range_max}%
+                </div>
+                <div className="text-sm text-slate-600">
+                  Annual return on your equity
                 </div>
               </CardContent>
             </Card>
 
-            {/* Cap Rate */}
-            <Card data-testid="metric-cap-rate" className="border-gray-200 hover:shadow-lg transition-shadow bg-white">
+            {/* Annual Net Cash Flow */}
+            <Card data-testid="metric-cashflow" className="border-gray-200 hover:shadow-lg transition-shadow bg-white">
               <CardHeader className="pb-3">
-                <CardDescription className="text-slate-600">Cap Rate</CardDescription>
+                <CardDescription className="text-slate-600 flex items-center gap-2">
+                  <Euro className="w-4 h-4" />
+                  Annual Net Cash Flow
+                </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="text-4xl font-bold text-slate-700">{metrics.cap_rate}%</div>
-                <div className="text-sm text-slate-600 mt-2">Annual NOI / Price</div>
-              </CardContent>
-            </Card>
-
-            {/* Monthly Cash Flow */}
-            <Card data-testid="metric-cash-flow" className="border-gray-200 hover:shadow-lg transition-shadow bg-white">
-              <CardHeader className="pb-3">
-                <CardDescription className="text-slate-600">Monthly Cash Flow</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className={`text-4xl font-bold ${metrics.monthly_cash_flow >= 0 ? 'text-blue-600' : 'text-slate-600'}`}>
-                  €{metrics.monthly_cash_flow.toLocaleString()}
+                <div className={`text-4xl font-bold mb-2 ${
+                  metrics.annual_net_cashflow >= 0 ? 'text-blue-900' : 'text-slate-700'
+                }`}>
+                  €{metrics.annual_net_cashflow.toLocaleString()}
                 </div>
-                <div className="text-sm text-slate-600 mt-2">After expenses</div>
+                <div className="text-sm text-slate-600">
+                  After all expenses and mortgage
+                </div>
               </CardContent>
             </Card>
+          </div>
+        </motion.div>
 
-            {/* Rental Yields */}
-            <Card data-testid="metric-short-rental" className="border-gray-200 hover:shadow-lg transition-shadow bg-white">
-              <CardHeader className="pb-3">
-                <CardDescription className="text-slate-600">Short-term Rental Yield</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-4xl font-bold text-blue-600">{metrics.short_term_rental_yield}%</div>
-                <div className="text-sm text-slate-600 mt-2">Airbnb / Vacation</div>
-              </CardContent>
-            </Card>
-
-            <Card data-testid="metric-long-rental" className="border-gray-200 hover:shadow-lg transition-shadow bg-white">
-              <CardHeader className="pb-3">
-                <CardDescription className="text-slate-600">Long-term Rental Yield</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-4xl font-bold text-blue-600">{metrics.long_term_rental_yield}%</div>
-                <div className="text-sm text-slate-600 mt-2">Traditional lease</div>
-              </CardContent>
-            </Card>
-
+        {/* Additional Metrics */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Appreciation */}
-            <Card data-testid="metric-appreciation" className="border-gray-200 hover:shadow-lg transition-shadow bg-white">
+            <Card className="border-gray-200 bg-white">
               <CardHeader className="pb-3">
-                <CardDescription className="text-slate-600">YoY Appreciation</CardDescription>
+                <CardDescription className="text-slate-600 flex items-center gap-2">
+                  <Calendar className="w-4 h-4" />
+                  Property Appreciation
+                </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="text-4xl font-bold text-blue-700">{metrics.yoy_appreciation}%</div>
-                <div className="text-sm text-slate-600 mt-2">Historical average</div>
+                <div className="flex items-baseline gap-4">
+                  <div>
+                    <div className="text-3xl font-bold text-blue-900">{metrics.yoy_appreciation}%</div>
+                    <div className="text-xs text-slate-600">Annual growth</div>
+                  </div>
+                  <div className="text-2xl text-slate-400">→</div>
+                  <div>
+                    <div className="text-3xl font-bold text-slate-900">
+                      €{(metrics.projected_5yr_value / 1000).toFixed(0)}k
+                    </div>
+                    <div className="text-xs text-slate-600">5-year value</div>
+                  </div>
+                </div>
+                <div className="text-sm text-blue-600 mt-3">
+                  +€{((metrics.projected_5yr_value - property_data.price) / 1000).toFixed(0)}k projected gain
+                </div>
               </CardContent>
             </Card>
 
-            {/* 5-Year Projection */}
-            <Card data-testid="metric-projected-value" className="border-gray-200 hover:shadow-lg transition-shadow bg-white">
+            {/* Estimated Value */}
+            <Card className="border-gray-200 bg-white">
               <CardHeader className="pb-3">
-                <CardDescription className="text-slate-600">5-Year Projected Value</CardDescription>
+                <CardDescription className="text-slate-600 flex items-center gap-2">
+                  <Home className="w-4 h-4" />
+                  AI Estimated Value
+                </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="text-4xl font-bold text-slate-900">
-                  €{(metrics.projected_5yr_value / 1000).toFixed(0)}k
+                <div className="text-3xl font-bold text-slate-900">
+                  €{metrics.estimated_value.toLocaleString()}
                 </div>
-                <div className="text-sm text-blue-600 mt-2">
-                  +€{((metrics.projected_5yr_value - property_data.price) / 1000).toFixed(0)}k gain
+                <div className="text-sm text-slate-600 mt-2">
+                  Based on market analysis and comparable properties
                 </div>
               </CardContent>
             </Card>
@@ -277,7 +335,7 @@ const ResultsPage = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+          transition={{ delay: 0.4 }}
         >
           <Card data-testid="ai-insights" className="border-gray-200 shadow-lg bg-gradient-to-br from-blue-50 to-white">
             <CardHeader>
@@ -296,11 +354,11 @@ const ResultsPage = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.5 }}
         >
           <div className="mb-6">
             <h2 className="text-3xl font-bold text-slate-900 mb-2">Investment Strategies</h2>
-            <p className="text-slate-600">Tailored approaches based on risk tolerance and goals</p>
+            <p className="text-slate-600">Tailored approaches based on risk tolerance and investment goals</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -347,7 +405,7 @@ const ResultsPage = () => {
                           <div className="font-bold text-blue-900">{strategy.initial_investment}</div>
                         </div>
                         <div>
-                          <div className="text-xs text-slate-600 mb-1">Monthly Income</div>
+                          <div className="text-xs text-slate-600 mb-1">Estimated Income</div>
                           <div className="font-bold text-blue-600">{strategy.monthly_income}</div>
                         </div>
                       </div>
@@ -372,11 +430,11 @@ const ResultsPage = () => {
                         </svg>
                       </div>
                       <h3 className="text-lg font-bold text-white mb-2">Premium Strategy</h3>
-                      <p className="text-blue-100 mb-6">
-                        Unlock detailed implementation plans, financial projections, and risk mitigation strategies
+                      <p className="text-blue-100 mb-6 text-sm">
+                        Unlock detailed implementation plans and financial projections
                       </p>
                       <Button className="bg-white text-blue-900 hover:bg-gray-100 font-semibold">
-                        Upgrade to Premium
+                        Upgrade to Access
                       </Button>
                     </div>
                   )}
