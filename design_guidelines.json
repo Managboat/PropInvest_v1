@@ -1,0 +1,129 @@
+{
+  "identity": {
+    "name": "E1: The Anti-AI Designer",
+    "mission": "Create an Investment Real Estate App that blends 'Swiss Precision' with 'Organic Warmth'. Avoid generic SaaS tropes.",
+    "tone": "Professional, Trustworthy, Data-Driven, Aspirational",
+    "archetype": "The Architect's Ledger"
+  },
+  "typography": {
+    "fonts": {
+      "heading": "Playfair Display, serif",
+      "body": "Manrope, sans-serif",
+      "mono": "JetBrains Mono, monospace"
+    },
+    "usage": {
+      "h1": "font-serif text-5xl md:text-7xl font-medium tracking-tight leading-[1.1]",
+      "h2": "font-serif text-3xl md:text-5xl font-medium tracking-tight",
+      "h3": "font-sans text-xl md:text-2xl font-bold tracking-tight uppercase text-muted-foreground",
+      "body": "font-sans text-base md:text-lg leading-relaxed text-slate-600",
+      "data": "font-mono text-sm font-medium tracking-wide",
+      "label": "font-sans text-xs font-bold uppercase tracking-widest text-muted-foreground"
+    }
+  },
+  "colors": {
+    "palette": {
+      "primary": {
+        "name": "Deep Forest",
+        "hex": "#1A3C34",
+        "usage": "Primary Buttons, Active States, Dark Mode Backgrounds"
+      },
+      "secondary": {
+        "name": "Terracotta",
+        "hex": "#C87961",
+        "usage": "Secondary Actions, Warm Accents, Illustrations"
+      },
+      "accent": {
+        "name": "Acid Lime",
+        "hex": "#D4F238",
+        "usage": "CTAs, Data Highlights, Success States (The E1 Twist)"
+      },
+      "background": {
+        "light": "#F5F2EB",
+        "dark": "#0F1211",
+        "paper": "#FFFFFF"
+      },
+      "text": {
+        "primary": "#1A3C34",
+        "secondary": "#5C6B67",
+        "muted": "#94A3B8"
+      }
+    },
+    "gradients": {
+      "hero": "linear-gradient(135deg, #1A3C34 0%, #0F1211 100%)",
+      "glass": "linear-gradient(180deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.4) 100%)"
+    }
+  },
+  "layout": {
+    "spacing": {
+      "container": "px-4 md:px-8 lg:px-12 max-w-7xl mx-auto",
+      "section": "py-20 md:py-32",
+      "card_padding": "p-6 md:p-8"
+    },
+    "grids": {
+      "marketing": "grid grid-cols-1 md:grid-cols-12 gap-8 (The Tetris Grid)",
+      "dashboard": "grid grid-cols-1 md:grid-cols-4 gap-6 (The Control Room)"
+    }
+  },
+  "components": {
+    "buttons": {
+      "primary": "bg-[#1A3C34] text-white hover:bg-[#142E28] rounded-full px-8 py-6 text-lg font-medium transition-all hover:scale-105 active:scale-95 shadow-xl shadow-[#1A3C34]/20",
+      "secondary": "bg-[#F5F2EB] text-[#1A3C34] border border-[#1A3C34]/10 hover:border-[#1A3C34] rounded-full px-6 py-4 font-medium transition-all",
+      "accent": "bg-[#D4F238] text-[#1A3C34] hover:bg-[#E2FF45] rounded-full px-8 py-6 font-bold uppercase tracking-wide shadow-[0_0_20px_rgba(212,242,56,0.4)]"
+    },
+    "cards": {
+      "base": "bg-white rounded-2xl border border-[#1A3C34]/5 shadow-sm hover:shadow-md transition-all duration-300",
+      "glass": "bg-white/70 backdrop-blur-xl border border-white/40 shadow-lg",
+      "premium": "relative overflow-hidden border border-[#D4F238]/50 bg-[#0F1211] text-white (Use Tracing Beam effect)"
+    },
+    "inputs": {
+      "style": "bg-white border-0 ring-1 ring-[#1A3C34]/10 focus:ring-2 focus:ring-[#1A3C34] rounded-xl px-4 py-3 text-lg shadow-inner placeholder:text-slate-400"
+    }
+  },
+  "visual_enhancers": {
+    "textures": {
+      "noise": "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E\")",
+      "grid": "bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"
+    },
+    "effects": {
+      "glassmorphism": "backdrop-blur-xl bg-white/60 border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.05)]",
+      "tracing_beam": "Animate a gradient border around premium cards using Framer Motion"
+    }
+  },
+  "images": {
+    "hero": {
+      "url": "https://images.unsplash.com/photo-1758548157747-285c7012db5b?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2Mzl8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBhcGFydG1lbnQlMjBpbnRlcmlvciUyMHN1bmxpZ2h0fGVufDB8fHx8MTc2NjQ4OTA3MXww&ixlib=rb-4.1.0&q=85",
+      "alt": "Sunlit modern apartment interior",
+      "usage": "Hero Section Background or Main Visual"
+    },
+    "texture": {
+      "url": "https://images.unsplash.com/photo-1600746491685-d13044b8e459?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1ODB8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMGdlb21ldHJpYyUyMGJ1aWxkaW5nJTIwZmFjYWRlfGVufDB8fHx8MTc2NjQ4OTA3M3ww&ixlib=rb-4.1.0&q=85",
+      "alt": "Abstract geometric building facade",
+      "usage": "Section Backgrounds, Parallax Layers"
+    },
+    "workspace": {
+      "url": "https://images.unsplash.com/photo-1661169398420-e8d229fb39f4?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHwxfHxtaW5pbWFsaXN0JTIwb2ZmaWNlJTIwZGVzayUyMGxhcHRvcHxlbnwwfHx8fDE3NjY0ODkwNzR8MA&ixlib=rb-4.1.0&q=85",
+      "alt": "Minimalist office desk with laptop",
+      "usage": "Feature Section: 'Professional Tools'"
+    }
+  },
+  "universal_guidelines": {
+    "anti_slop_rules": [
+      "DO NOT use generic 'Inter' font for headings. Use Playfair Display.",
+      "DO NOT use full-screen gradients. Use noise textures and solid colors.",
+      "DO NOT center everything. Use asymmetry and the 'Tetris Grid'.",
+      "DO NOT use default Shadcn styling. Customize radii to 'rounded-xl' or 'rounded-full'.",
+      "ALWAYS add 'data-testid' to interactive elements."
+    ],
+    "accessibility": [
+      "Ensure text contrast ratio is at least 4.5:1.",
+      "Use 'rem' for font sizes.",
+      "Focus states must be visible and high-contrast."
+    ],
+    "motion": [
+      "Use 'sonner' for toasts.",
+      "Use 'framer-motion' for entrance animations (stagger children).",
+      "Hover states must lift elements (-translate-y-1) and increase shadow."
+    ]
+  },
+  "instructions_to_main_agent": "You are building a high-end Real Estate Investment Tool. Think 'Architectural Digest' meets 'Bloomberg Terminal'. Use the provided colors and fonts strictly. Implement the 'Tetris Grid' for the landing page and 'Control Room' layout for the dashboard. Use the 'Acid Lime' accent sparingly to guide the user's eye to key conversion points (ROI, 'Get Started')."
+}
