@@ -79,16 +79,27 @@ class PropertyData(BaseModel):
 class InvestmentMetrics(BaseModel):
     model_config = ConfigDict(extra="ignore")
     
-    roi: float
-    roe: float
+    # New metrics
+    investment_score: int  # 1-10
+    roi_range_min: float
+    roi_range_max: float
+    roe_range_min: float
+    roe_range_max: float
+    annual_net_cashflow: float
+    
+    # Keep existing
     estimated_value: float
-    short_term_rental_yield: float
-    long_term_rental_yield: float
     yoy_appreciation: float
     projected_5yr_value: float
-    cash_on_cash_return: float
-    cap_rate: float
-    monthly_cash_flow: float
+    
+    # For backward compatibility (optional)
+    roi: Optional[float] = None
+    roe: Optional[float] = None
+    short_term_rental_yield: Optional[float] = None
+    long_term_rental_yield: Optional[float] = None
+    cash_on_cash_return: Optional[float] = None
+    cap_rate: Optional[float] = None
+    monthly_cash_flow: Optional[float] = None
 
 class InvestmentStrategy(BaseModel):
     model_config = ConfigDict(extra="ignore")
