@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, TrendingUp, DollarSign, Home, Calendar, Lock, Save } from 'lucide-react';
+import { ArrowLeft, Save, Building2, MapPin, Home } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
-import { Progress } from '../components/ui/progress';
 import { toast } from 'sonner';
 import axios from 'axios';
 
@@ -43,34 +42,40 @@ const ResultsPage = () => {
 
   const getRiskColor = (risk) => {
     switch (risk) {
-      case 'low': return 'bg-green-100 text-green-800 border-green-200';
-      case 'medium': return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'medium-high': return 'bg-orange-100 text-orange-800 border-orange-200';
-      case 'high': return 'bg-red-100 text-red-800 border-red-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+      case 'low': return 'bg-green-100 text-green-800 border-green-300';
+      case 'medium': return 'bg-blue-100 text-blue-800 border-blue-300';
+      case 'medium-high': return 'bg-orange-100 text-orange-800 border-orange-300';
+      case 'high': return 'bg-red-100 text-red-800 border-red-300';
+      default: return 'bg-gray-100 text-gray-800 border-gray-300';
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F2EB]">
+    <div className="min-h-screen bg-gray-50">
       {/* Navigation */}
-      <nav className="bg-white/70 backdrop-blur-xl border-b border-[#1A3C34]/5 sticky top-0 z-50">
+      <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div className="px-4 md:px-8 lg:px-12 max-w-7xl mx-auto">
-          <div className="flex items-center justify-between h-20">
-            <Button
-              data-testid="back-to-analyze-button"
-              variant="ghost"
-              onClick={() => navigate('/analyze')}
-              className="text-[#1A3C34] hover:bg-[#1A3C34]/5"
-            >
-              <ArrowLeft className="w-5 h-5 mr-2" />
-              New Analysis
-            </Button>
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center gap-8">
+              <div className="flex items-center gap-2">
+                <Building2 className="w-7 h-7 text-blue-900" />
+                <span className="text-xl font-bold text-slate-900">PropInvest</span>
+              </div>
+              <Button
+                data-testid="back-to-analyze-button"
+                variant="ghost"
+                onClick={() => navigate('/analyze')}
+                className="text-slate-600 hover:text-slate-900"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                New Analysis
+              </Button>
+            </div>
             <Button
               data-testid="save-analysis-button"
               onClick={handleSaveAnalysis}
               disabled={saving}
-              className="bg-[#1A3C34] text-white hover:bg-[#142E28] rounded-full px-6 py-5"
+              className="bg-blue-900 text-white hover:bg-blue-800"
             >
               <Save className="w-4 h-4 mr-2" />
               Save to Portfolio
@@ -79,50 +84,71 @@ const ResultsPage = () => {
         </div>
       </nav>
 
-      <div className="py-12 md:py-20 px-4 md:px-8 lg:px-12 max-w-7xl mx-auto space-y-12">
-        {/* Property Header */}
+      <div className="py-8 md:py-12 px-4 md:px-8 lg:px-12 max-w-7xl mx-auto space-y-8">
+        {/* Property Header with Image */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           data-testid="property-header"
         >
-          <Card className="border-[#1A3C34]/5 shadow-lg">
-            <CardHeader>
-              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-                <div>
-                  <CardTitle className="font-serif text-3xl md:text-4xl mb-2">
+          <Card className="border-gray-200 shadow-lg overflow-hidden">
+            {property_data.image_url && (
+              <div className="h-64 md:h-96 w-full relative">
+                <img
+                  src={property_data.image_url}
+                  alt={property_data.title}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/40 to-transparent"></div>
+                <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 text-white">
+                  <h1 className="text-3xl md:text-4xl font-bold mb-2">
                     {property_data.title}
-                  </CardTitle>
-                  <CardDescription className="text-lg">
-                    {property_data.location} • {property_data.property_type}
-                  </CardDescription>
+                  </h1>
+                  <div className="flex items-center gap-4 text-white/90">
+                    <div className="flex items-center gap-1">
+                      <MapPin className="w-4 h-4" />
+                      <span>{property_data.location}</span>
+                    </div>
+                    <span>•</span>
+                    <span>{property_data.property_type}</span>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <div className="text-4xl font-mono font-bold text-[#1A3C34]">
+              </div>
+            )}
+            
+            <CardContent className="p-6 md:p-8">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-6">
+                <div>
+                  <div className="text-4xl md:text-5xl font-bold text-blue-900">
                     €{property_data.price.toLocaleString()}
                   </div>
-                  <div className="text-sm text-slate-600">
+                  <div className="text-sm text-slate-600 mt-1">
                     €{(property_data.price / property_data.size_sqm).toFixed(0)}/sqm
                   </div>
                 </div>
               </div>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-6 border-t border-gray-200">
                 <div className="space-y-1">
                   <div className="text-sm text-slate-600">Size</div>
-                  <div className="text-xl font-mono font-semibold">{property_data.size_sqm} sqm</div>
+                  <div className="text-xl font-bold text-slate-900">{property_data.size_sqm} sqm</div>
                 </div>
                 {property_data.rooms && (
                   <div className="space-y-1">
                     <div className="text-sm text-slate-600">Rooms</div>
-                    <div className="text-xl font-mono font-semibold">{property_data.rooms}</div>
+                    <div className="text-xl font-bold text-slate-900">{property_data.rooms}</div>
                   </div>
                 )}
                 {property_data.bathrooms && (
                   <div className="space-y-1">
                     <div className="text-sm text-slate-600">Bathrooms</div>
-                    <div className="text-xl font-mono font-semibold">{property_data.bathrooms}</div>
+                    <div className="text-xl font-bold text-slate-900">{property_data.bathrooms}</div>
+                  </div>
+                )}
+                {property_data.monthly_expenses && (
+                  <div className="space-y-1">
+                    <div className="text-sm text-slate-600">Monthly Expenses</div>
+                    <div className="text-xl font-bold text-slate-900">€{property_data.monthly_expenses.toFixed(0)}</div>
                   </div>
                 )}
               </div>
@@ -130,84 +156,117 @@ const ResultsPage = () => {
           </Card>
         </motion.div>
 
-        {/* Metrics Grid */}
+        {/* Investment Metrics */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <h2 className="font-serif text-3xl font-medium text-[#1A3C34] mb-6">Investment Metrics</h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <Card data-testid="metric-roi" className="border-[#1A3C34]/5 hover:shadow-md transition-shadow">
+          <div className="mb-6">
+            <h2 className="text-3xl font-bold text-slate-900 mb-2">Investment Metrics</h2>
+            <p className="text-slate-600">Comprehensive financial analysis and projections</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* ROI */}
+            <Card data-testid="metric-roi" className="border-gray-200 hover:shadow-lg transition-shadow bg-white">
               <CardHeader className="pb-3">
-                <CardDescription>Return on Investment</CardDescription>
+                <CardDescription className="text-slate-600">Return on Investment</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-mono font-bold text-[#1A3C34]">{metrics.roi}%</div>
-                <Progress value={Math.min(metrics.roi, 100)} className="mt-2" />
-              </CardContent>
-            </Card>
-
-            <Card data-testid="metric-roe" className="border-[#1A3C34]/5 hover:shadow-md transition-shadow">
-              <CardHeader className="pb-3">
-                <CardDescription>Return on Equity</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-mono font-bold text-[#1A3C34]">{metrics.roe}%</div>
-                <Progress value={Math.min(metrics.roe, 100)} className="mt-2" />
-              </CardContent>
-            </Card>
-
-            <Card data-testid="metric-short-rental" className="border-[#1A3C34]/5 hover:shadow-md transition-shadow">
-              <CardHeader className="pb-3">
-                <CardDescription>Short-term Rental Yield</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-mono font-bold text-[#C87961]">{metrics.short_term_rental_yield}%</div>
-                <Progress value={metrics.short_term_rental_yield * 10} className="mt-2" />
-              </CardContent>
-            </Card>
-
-            <Card data-testid="metric-long-rental" className="border-[#1A3C34]/5 hover:shadow-md transition-shadow">
-              <CardHeader className="pb-3">
-                <CardDescription>Long-term Rental Yield</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-mono font-bold text-[#C87961]">{metrics.long_term_rental_yield}%</div>
-                <Progress value={metrics.long_term_rental_yield * 10} className="mt-2" />
-              </CardContent>
-            </Card>
-
-            <Card data-testid="metric-appreciation" className="border-[#1A3C34]/5 hover:shadow-md transition-shadow">
-              <CardHeader className="pb-3">
-                <CardDescription>YoY Appreciation</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-mono font-bold text-[#1A3C34]">{metrics.yoy_appreciation}%</div>
-              </CardContent>
-            </Card>
-
-            <Card data-testid="metric-projected-value" className="border-[#1A3C34]/5 hover:shadow-md transition-shadow md:col-span-2">
-              <CardHeader className="pb-3">
-                <CardDescription>Projected 5-Year Value</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-mono font-bold text-[#1A3C34]">
-                  €{metrics.projected_5yr_value.toLocaleString()}
-                </div>
-                <div className="text-sm text-slate-600 mt-1">
-                  +€{(metrics.projected_5yr_value - property_data.price).toLocaleString()} gain
+                <div className="text-4xl font-bold text-blue-900">{metrics.roi}%</div>
+                <div className="h-2 bg-gray-200 rounded-full mt-3 overflow-hidden">
+                  <div 
+                    className="h-full bg-blue-600 rounded-full"
+                    style={{ width: `${Math.min(metrics.roi, 100)}%` }}
+                  ></div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card data-testid="metric-estimated-value" className="border-[#1A3C34]/5 hover:shadow-md transition-shadow">
+            {/* ROE */}
+            <Card data-testid="metric-roe" className="border-gray-200 hover:shadow-lg transition-shadow bg-white">
               <CardHeader className="pb-3">
-                <CardDescription>AI Estimated Value</CardDescription>
+                <CardDescription className="text-slate-600">Return on Equity</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-mono font-bold text-[#1A3C34]">
-                  €{metrics.estimated_value.toLocaleString()}
+                <div className="text-4xl font-bold text-blue-900">{metrics.roe}%</div>
+                <div className="h-2 bg-gray-200 rounded-full mt-3 overflow-hidden">
+                  <div 
+                    className="h-full bg-blue-600 rounded-full"
+                    style={{ width: `${Math.min(metrics.roe, 100)}%` }}
+                  ></div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Cap Rate */}
+            <Card data-testid="metric-cap-rate" className="border-gray-200 hover:shadow-lg transition-shadow bg-white">
+              <CardHeader className="pb-3">
+                <CardDescription className="text-slate-600">Cap Rate</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-4xl font-bold text-slate-700">{metrics.cap_rate}%</div>
+                <div className="text-sm text-slate-600 mt-2">Annual NOI / Price</div>
+              </CardContent>
+            </Card>
+
+            {/* Monthly Cash Flow */}
+            <Card data-testid="metric-cash-flow" className="border-gray-200 hover:shadow-lg transition-shadow bg-white">
+              <CardHeader className="pb-3">
+                <CardDescription className="text-slate-600">Monthly Cash Flow</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className={`text-4xl font-bold ${metrics.monthly_cash_flow >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  €{metrics.monthly_cash_flow.toLocaleString()}
+                </div>
+                <div className="text-sm text-slate-600 mt-2">After expenses</div>
+              </CardContent>
+            </Card>
+
+            {/* Rental Yields */}
+            <Card data-testid="metric-short-rental" className="border-gray-200 hover:shadow-lg transition-shadow bg-white">
+              <CardHeader className="pb-3">
+                <CardDescription className="text-slate-600">Short-term Rental Yield</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-4xl font-bold text-blue-600">{metrics.short_term_rental_yield}%</div>
+                <div className="text-sm text-slate-600 mt-2">Airbnb / Vacation</div>
+              </CardContent>
+            </Card>
+
+            <Card data-testid="metric-long-rental" className="border-gray-200 hover:shadow-lg transition-shadow bg-white">
+              <CardHeader className="pb-3">
+                <CardDescription className="text-slate-600">Long-term Rental Yield</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-4xl font-bold text-blue-600">{metrics.long_term_rental_yield}%</div>
+                <div className="text-sm text-slate-600 mt-2">Traditional lease</div>
+              </CardContent>
+            </Card>
+
+            {/* Appreciation */}
+            <Card data-testid="metric-appreciation" className="border-gray-200 hover:shadow-lg transition-shadow bg-white">
+              <CardHeader className="pb-3">
+                <CardDescription className="text-slate-600">YoY Appreciation</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-4xl font-bold text-green-600">{metrics.yoy_appreciation}%</div>
+                <div className="text-sm text-slate-600 mt-2">Historical average</div>
+              </CardContent>
+            </Card>
+
+            {/* 5-Year Projection */}
+            <Card data-testid="metric-projected-value" className="border-gray-200 hover:shadow-lg transition-shadow bg-white">
+              <CardHeader className="pb-3">
+                <CardDescription className="text-slate-600">5-Year Projected Value</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-4xl font-bold text-slate-900">
+                  €{(metrics.projected_5yr_value / 1000).toFixed(0)}k
+                </div>
+                <div className="text-sm text-green-600 mt-2">
+                  +€{((metrics.projected_5yr_value - property_data.price) / 1000).toFixed(0)}k gain
                 </div>
               </CardContent>
             </Card>
@@ -220,11 +279,11 @@ const ResultsPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <Card data-testid="ai-insights" className="border-[#1A3C34]/5 shadow-lg bg-gradient-to-br from-white to-[#D4F238]/5">
+          <Card data-testid="ai-insights" className="border-gray-200 shadow-lg bg-gradient-to-br from-blue-50 to-white">
             <CardHeader>
-              <CardTitle className="font-serif text-2xl flex items-center gap-2">
-                <TrendingUp className="w-6 h-6 text-[#1A3C34]" />
-                AI Market Insights
+              <CardTitle className="text-2xl font-bold flex items-center gap-2 text-blue-900">
+                <Home className="w-6 h-6" />
+                AI Market Analysis
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -239,54 +298,67 @@ const ResultsPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <h2 className="font-serif text-3xl font-medium text-[#1A3C34] mb-6">Investment Strategies</h2>
+          <div className="mb-6">
+            <h2 className="text-3xl font-bold text-slate-900 mb-2">Investment Strategies</h2>
+            <p className="text-slate-600">Tailored approaches based on risk tolerance and goals</p>
+          </div>
+          
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {strategies.map((strategy, idx) => (
               <Card
                 key={idx}
                 data-testid={`strategy-${strategy.risk_level}`}
-                className={`border transition-all hover:shadow-lg ${
+                className={`border transition-all hover:shadow-xl ${
                   strategy.is_premium
-                    ? 'border-[#D4F238]/50 bg-[#0F1211] text-white relative overflow-hidden'
-                    : 'border-[#1A3C34]/5 hover:-translate-y-1'
+                    ? 'bg-gradient-to-br from-slate-900 to-blue-900 text-white border-blue-800'
+                    : 'bg-white border-gray-200 hover:border-blue-300'
                 }`}
               >
-                {strategy.is_premium && (
-                  <div className="absolute top-4 right-4">
-                    <Lock className="w-5 h-5 text-[#D4F238]" />
-                  </div>
-                )}
                 <CardHeader>
-                  <div className="flex items-start justify-between mb-2">
-                    <Badge className={getRiskColor(strategy.risk_level)}>
+                  <div className="flex items-start justify-between mb-3">
+                    <Badge className={`${getRiskColor(strategy.risk_level)} font-semibold border`}>
                       {strategy.risk_level.toUpperCase()} RISK
                     </Badge>
                   </div>
-                  <CardTitle className="font-serif text-2xl">{strategy.strategy_name}</CardTitle>
-                  <CardDescription className={strategy.is_premium ? 'text-white/70' : ''}>
+                  <CardTitle className={`text-2xl font-bold ${strategy.is_premium ? 'text-white' : 'text-slate-900'}`}>
+                    {strategy.strategy_name}
+                  </CardTitle>
+                  <CardDescription className={strategy.is_premium ? 'text-blue-100' : 'text-slate-600'}>
                     {strategy.description}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {!strategy.is_premium ? (
                     <>
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-2 gap-4 pb-4 border-b border-gray-200">
                         <div>
                           <div className="text-xs text-slate-600 mb-1">Expected Return</div>
-                          <div className="font-semibold">{strategy.expected_return}</div>
+                          <div className="font-bold text-slate-900">{strategy.expected_return}</div>
                         </div>
                         <div>
                           <div className="text-xs text-slate-600 mb-1">Time Horizon</div>
-                          <div className="font-semibold">{strategy.time_horizon}</div>
+                          <div className="font-bold text-slate-900">{strategy.time_horizon}</div>
                         </div>
                       </div>
-                      <div>
-                        <div className="text-xs text-slate-600 mb-2">Key Points</div>
-                        <ul className="space-y-1 text-sm">
+                      
+                      <div className="space-y-3">
+                        <div>
+                          <div className="text-xs text-slate-600 mb-1">Initial Investment</div>
+                          <div className="font-bold text-blue-900">{strategy.initial_investment}</div>
+                        </div>
+                        <div>
+                          <div className="text-xs text-slate-600 mb-1">Monthly Income</div>
+                          <div className="font-bold text-green-600">{strategy.monthly_income}</div>
+                        </div>
+                      </div>
+
+                      <div className="pt-4 border-t border-gray-200">
+                        <div className="text-xs font-semibold text-slate-600 mb-3">KEY POINTS</div>
+                        <ul className="space-y-2">
                           {strategy.key_points.map((point, i) => (
-                            <li key={i} className="flex items-start gap-2">
-                              <span className="text-[#D4F238] mt-1">•</span>
-                              <span>{point}</span>
+                            <li key={i} className="flex items-start gap-2 text-sm">
+                              <span className="text-blue-600 mt-1 flex-shrink-0">•</span>
+                              <span className="text-slate-700">{point}</span>
                             </li>
                           ))}
                         </ul>
@@ -294,11 +366,16 @@ const ResultsPage = () => {
                     </>
                   ) : (
                     <div className="text-center py-8">
-                      <Lock className="w-12 h-12 mx-auto mb-4 text-[#D4F238]" />
-                      <p className="text-white/90 mb-4">
-                        Unlock premium strategies with detailed implementation plans
+                      <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-blue-500/20 flex items-center justify-center">
+                        <svg className="w-8 h-8 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                      </div>
+                      <h3 className="text-lg font-bold text-white mb-2">Premium Strategy</h3>
+                      <p className="text-blue-100 mb-6">
+                        Unlock detailed implementation plans, financial projections, and risk mitigation strategies
                       </p>
-                      <Button className="bg-[#D4F238] text-[#1A3C34] hover:bg-[#E2FF45] rounded-full px-6 py-5">
+                      <Button className="bg-white text-blue-900 hover:bg-gray-100 font-semibold">
                         Upgrade to Premium
                       </Button>
                     </div>
