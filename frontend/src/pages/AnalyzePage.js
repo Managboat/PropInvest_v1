@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Link2, FileInput, ArrowLeft, Loader2, Building2 } from 'lucide-react';
+import { Link2, FileInput, ArrowLeft, Loader2, Building2, ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
@@ -17,6 +17,7 @@ const AnalyzePage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('url');
+  const [showPurchaseDetails, setShowPurchaseDetails] = useState(false);
   
   const [url, setUrl] = useState('');
   
@@ -28,8 +29,19 @@ const AnalyzePage = () => {
     size_sqm: '',
     rooms: '',
     bathrooms: '',
-    monthly_expenses: '',
     renovation_needed: false
+  });
+
+  const [purchaseDetails, setPurchaseDetails] = useState({
+    mortgage_percentage: '80',
+    mortgage_rate: '3.5',
+    mortgage_years: '25',
+    is_first_home: true,
+    purchase_tax_rate: '2',
+    notary_fees: '2000',
+    agency_fees_percentage: '3',
+    annual_property_tax: '1000',
+    maintenance_percentage: '1'
   });
 
   const handleUrlAnalysis = async () => {
@@ -40,7 +52,10 @@ const AnalyzePage = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post(`${API}/analyze`, { url });
+      const response = await axios.post(`${API}/analyze`, { 
+        url,
+        purchase_details: purchaseDetails
+      });
       toast.success('Property analyzed successfully!');
       navigate('/results/new', { state: { analysis: response.data } });
     } catch (error) {
@@ -67,8 +82,8 @@ const AnalyzePage = () => {
         size_sqm: manualData.size_sqm ? parseFloat(manualData.size_sqm) : 80,
         rooms: manualData.rooms ? parseInt(manualData.rooms) : null,
         bathrooms: manualData.bathrooms ? parseInt(manualData.bathrooms) : null,
-        monthly_expenses: manualData.monthly_expenses ? parseFloat(manualData.monthly_expenses) : null,
-        renovation_needed: manualData.renovation_needed
+        renovation_needed: manualData.renovation_needed,
+        purchase_details: purchaseDetails
       };
 
       const response = await axios.post(`${API}/analyze`, payload);
@@ -123,19 +138,27 @@ const AnalyzePage = () => {
             </p>
           </div>
 
-          <Card className="border-gray-200 shadow-lg">
+          <Card className="border-gray-200 shadow-lg bg-white">
             <CardHeader>
               <CardTitle className="text-2xl font-bold">Property Information</CardTitle>
               <CardDescription>Choose your input method</CardDescription>
             </CardHeader>
             <CardContent>
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="grid w-full grid-cols-2 mb-8">
-                  <TabsTrigger value="url" data-testid="url-tab" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
+                <TabsList className="grid w-full grid-cols-2 mb-8 bg-slate-100">
+                  <TabsTrigger 
+                    value="url" 
+                    data-testid="url-tab" 
+                    className="data-[state=active]:bg-blue-900 data-[state=active]:text-white"
+                  >
                     <Link2 className="w-4 h-4 mr-2" />
                     URL Import
                   </TabsTrigger>
-                  <TabsTrigger value="manual" data-testid="manual-tab" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
+                  <TabsTrigger 
+                    value="manual" 
+                    data-testid="manual-tab" 
+                    className="data-[state=active]:bg-blue-900 data-[state=active]:text-white"
+                  >
                     <FileInput className="w-4 h-4 mr-2" />
                     Manual Entry
                   </TabsTrigger>
@@ -162,7 +185,7 @@ const AnalyzePage = () => {
                     data-testid="analyze-url-button"
                     onClick={handleUrlAnalysis}
                     disabled={loading}
-                    className="w-full bg-blue-600 text-white hover:bg-blue-700 h-12 text-base font-semibold"
+                    className="w-full bg-blue-900 text-white hover:bg-blue-800 h-12 text-base font-semibold"
                   >
                     {loading ? (
                       <>
@@ -224,18 +247,6 @@ const AnalyzePage = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="monthly_expenses">Monthly Expenses (€)</Label>
-                      <Input
-                        id="monthly_expenses"
-                        data-testid="monthly-expenses-input"
-                        type="number"
-                        placeholder="500"
-                        value={manualData.monthly_expenses}
-                        onChange={(e) => setManualData({ ...manualData, monthly_expenses: e.target.value })}
-                      />
-                    </div>
-
-                    <div className="space-y-2">
                       <Label htmlFor="rooms">Rooms</Label>
                       <Input
                         id="rooms"
@@ -287,24 +298,136 @@ const AnalyzePage = () => {
                       <Label htmlFor="renovation" className="cursor-pointer">Property needs renovation</Label>
                     </div>
                   </div>
-
-                  <Button
-                    data-testid="analyze-manual-button"
-                    onClick={handleManualAnalysis}
-                    disabled={loading}
-                    className="w-full bg-blue-600 text-white hover:bg-blue-700 h-12 text-base font-semibold"
-                  >
-                    {loading ? (
-                      <>
-                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                        Analyzing...
-                      </>
-                    ) : (
-                      'Analyze Property'
-                    )}
-                  </Button>
                 </TabsContent>
               </Tabs>
+
+              {/* Purchase Details Section */}
+              <div className="mt-8 pt-6 border-t border-gray-200">
+                <button
+                  onClick={() => setShowPurchaseDetails(!showPurchaseDetails)}
+                  className="w-full flex items-center justify-between text-left p-4 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors"
+                >
+                  <div>
+                    <h3 className="text-lg font-bold text-slate-900">Purchase & Financing Details</h3>
+                    <p className="text-sm text-slate-600">Configure mortgage, taxes, and fees for accurate returns</p>
+                  </div>
+                  {showPurchaseDetails ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                </button>
+
+                {showPurchaseDetails && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    className="mt-4 space-y-4 p-4 bg-blue-50 rounded-lg"
+                  >
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label>Mortgage %</Label>
+                        <Input
+                          type="number"
+                          placeholder="80"
+                          value={purchaseDetails.mortgage_percentage}
+                          onChange={(e) => setPurchaseDetails({...purchaseDetails, mortgage_percentage: e.target.value})}
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label>Mortgage Rate (%)</Label>
+                        <Input
+                          type="number"
+                          step="0.1"
+                          placeholder="3.5"
+                          value={purchaseDetails.mortgage_rate}
+                          onChange={(e) => setPurchaseDetails({...purchaseDetails, mortgage_rate: e.target.value})}
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label>Mortgage Duration (years)</Label>
+                        <Input
+                          type="number"
+                          placeholder="25"
+                          value={purchaseDetails.mortgage_years}
+                          onChange={(e) => setPurchaseDetails({...purchaseDetails, mortgage_years: e.target.value})}
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label>Property Type</Label>
+                        <select
+                          value={purchaseDetails.is_first_home ? 'first' : 'second'}
+                          onChange={(e) => setPurchaseDetails({...purchaseDetails, is_first_home: e.target.value === 'first'})}
+                          className="w-full h-10 px-3 rounded-md border border-gray-300 bg-white"
+                        >
+                          <option value="first">Prima Casa (2% tax)</option>
+                          <option value="second">Seconda Casa (9% tax)</option>
+                        </select>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label>Notary Fees (€)</Label>
+                        <Input
+                          type="number"
+                          placeholder="2000"
+                          value={purchaseDetails.notary_fees}
+                          onChange={(e) => setPurchaseDetails({...purchaseDetails, notary_fees: e.target.value})}
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label>Agency Fees (%)</Label>
+                        <Input
+                          type="number"
+                          step="0.1"
+                          placeholder="3"
+                          value={purchaseDetails.agency_fees_percentage}
+                          onChange={(e) => setPurchaseDetails({...purchaseDetails, agency_fees_percentage: e.target.value})}
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label>Annual Property Tax (€)</Label>
+                        <Input
+                          type="number"
+                          placeholder="1000"
+                          value={purchaseDetails.annual_property_tax}
+                          onChange={(e) => setPurchaseDetails({...purchaseDetails, annual_property_tax: e.target.value})}
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label>Maintenance (% of value/year)</Label>
+                        <Input
+                          type="number"
+                          step="0.1"
+                          placeholder="1"
+                          value={purchaseDetails.maintenance_percentage}
+                          onChange={(e) => setPurchaseDetails({...purchaseDetails, maintenance_percentage: e.target.value})}
+                        />
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </div>
+
+              {/* Analyze Button */}
+              {activeTab === 'manual' && (
+                <Button
+                  data-testid="analyze-manual-button"
+                  onClick={handleManualAnalysis}
+                  disabled={loading}
+                  className="w-full bg-blue-900 text-white hover:bg-blue-800 h-12 text-base font-semibold mt-6"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                      Analyzing...
+                    </>
+                  ) : (
+                    'Analyze Property'
+                  )}
+                </Button>
+              )}
             </CardContent>
           </Card>
         </motion.div>
