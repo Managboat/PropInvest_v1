@@ -227,10 +227,10 @@ const AnalyzePage = () => {
                           {loading ? (
                             <>
                               <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                              Extracting...
+                              Estrazione...
                             </>
                           ) : (
-                            'Extract Property Data'
+                            'Estrai Dati Proprietà'
                           )}
                         </Button>
                       </TabsContent>
