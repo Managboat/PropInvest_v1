@@ -357,8 +357,8 @@ const ResultsPage = () => {
           transition={{ delay: 0.5 }}
         >
           <div className="mb-6">
-            <h2 className="text-3xl font-bold text-slate-900 mb-2">Investment Strategies</h2>
-            <p className="text-slate-600">Tailored approaches based on risk tolerance and investment goals</p>
+            <h2 className="text-3xl font-bold text-slate-900 mb-2">Strategie di Investimento</h2>
+            <p className="text-slate-600">Approcci su misura basati su tolleranza al rischio e obiettivi</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
