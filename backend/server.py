@@ -29,6 +29,17 @@ app = FastAPI()
 api_router = APIRouter(prefix="/api")
 
 # Pydantic Models
+class PurchaseDetails(BaseModel):
+    mortgage_percentage: float = 80
+    mortgage_rate: float = 3.5
+    mortgage_years: int = 25
+    is_first_home: bool = True
+    purchase_tax_rate: float = 2
+    notary_fees: float = 2000
+    agency_fees_percentage: float = 3
+    annual_property_tax: float = 1000
+    maintenance_percentage: float = 1
+
 class PropertyInput(BaseModel):
     url: Optional[str] = None
     # Manual input fields
@@ -42,8 +53,8 @@ class PropertyInput(BaseModel):
     floor: Optional[str] = None
     condition: Optional[str] = None
     year_built: Optional[int] = None
-    monthly_expenses: Optional[float] = None
     renovation_needed: Optional[bool] = None
+    purchase_details: Optional[PurchaseDetails] = None
 
 class PropertyData(BaseModel):
     model_config = ConfigDict(extra="ignore")
