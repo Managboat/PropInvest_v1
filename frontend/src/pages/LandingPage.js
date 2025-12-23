@@ -159,23 +159,24 @@ const LandingPage = () => {
           >
             <div className="relative h-full min-h-[500px] rounded-2xl overflow-hidden shadow-2xl">
               <img
-                src="https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=800&q=80"
-                alt="Luxury property in Italian city"
+                src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80"
+                alt="Luxury property Porto Cervo"
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent"></div>
               <div className="absolute bottom-8 left-8 right-8">
                 <div className="bg-white/95 backdrop-blur-sm rounded-xl p-6 shadow-xl">
-                  <div className="text-sm font-semibold text-blue-900 mb-1">INVESTIMENTO ESEMPIO</div>
-                  <div className="text-2xl font-bold text-slate-900 mb-3">Appartamento Centro Roma</div>
+                  <div className="text-sm font-semibold text-blue-900 mb-1">INVESTIMENTO DI LORENZO</div>
+                  <div className="text-2xl font-bold text-slate-900 mb-1">Appartamento Porto Cervo, Sardegna</div>
+                  <div className="text-sm text-slate-600 mb-3">Strategia: Fix and Flip</div>
                   <div className="grid grid-cols-3 gap-4 text-center">
                     <div>
                       <div className="text-xs text-slate-600">ROI 5 anni</div>
-                      <div className="text-lg font-bold text-blue-900">47%</div>
+                      <div className="text-lg font-bold text-blue-900">32%</div>
                     </div>
                     <div>
                       <div className="text-xs text-slate-600">Cash Flow</div>
-                      <div className="text-lg font-bold text-slate-900">€18k/anno</div>
+                      <div className="text-lg font-bold text-slate-900">€25k/anno</div>
                     </div>
                     <div>
                       <div className="text-xs text-slate-600">Score</div>
