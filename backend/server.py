@@ -125,12 +125,6 @@ class AnalysisResult(BaseModel):
     ai_insights: str
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
-class SavedAnalysis(BaseModel):
-    model_config = ConfigDict(extra="ignore")
-    
-    analysis_id: str
-    user_notes: Optional[str] = None
-
 # Helper Functions
 def extract_property_from_url(url: str) -> Dict:
     """Extract property data from immobiliare.it URL"""
