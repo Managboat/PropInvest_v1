@@ -200,54 +200,78 @@ def extract_property_from_url(url: str) -> Dict:
             'monthly_expenses': 500.0
         }
 
-async def calculate_metrics(property_data: PropertyData) -> InvestmentMetrics:
-    """Calculate investment metrics"""
+async def calculate_metrics(property_data: PropertyData, purchase_details: PurchaseDetails) -> InvestmentMetrics:
+    """Calculate investment metrics with purchase details"""
     price = property_data.price
     size_sqm = property_data.size_sqm
-    monthly_expenses = property_data.monthly_expenses or (price * 0.002)
     
-    # Price per sqm
-    price_per_sqm = price / size_sqm if size_sqm > 0 else 0
+    # Purchase costs
+    mortgage_amount = price * (purchase_details.mortgage_percentage / 100)
+    down_payment = price - mortgage_amount
+    purchase_tax = price * (purchase_details.purchase_tax_rate / 100)
+    agency_fees = price * (purchase_details.agency_fees_percentage / 100)
+    total_upfront = down_payment + purchase_tax + purchase_details.notary_fees + agency_fees
     
-    # Estimated monthly rent
-    monthly_rent_short = price * 0.004  # 0.4% for short-term
-    monthly_rent_long = price * 0.003   # 0.3% for long-term
+    # Monthly mortgage payment
+    monthly_rate = (purchase_details.mortgage_rate / 100) / 12
+    num_payments = purchase_details.mortgage_years * 12
+    if monthly_rate > 0:
+        monthly_mortgage = mortgage_amount * (monthly_rate * (1 + monthly_rate) ** num_payments) / ((1 + monthly_rate) ** num_payments - 1)
+    else:
+        monthly_mortgage = mortgage_amount / num_payments
     
-    # Annual rental yields
-    short_term_yield = (monthly_rent_short * 12 / price) * 100
-    long_term_yield = (monthly_rent_long * 12 / price) * 100
+    # Annual costs
+    annual_maintenance = price * (purchase_details.maintenance_percentage / 100)
+    annual_costs = (monthly_mortgage * 12) + purchase_details.annual_property_tax + annual_maintenance
     
-    # ROI calculation (20% down, 5 years)
-    down_payment = price * 0.2
-    annual_net_income = (monthly_rent_long * 12) - (monthly_expenses * 12)
-    roi = ((annual_net_income * 5) / down_payment) * 100
+    # Estimated rental income (conservative and optimistic)
+    monthly_rent_conservative = price * 0.0025  # 0.25%
+    monthly_rent_optimistic = price * 0.0035    # 0.35%
     
-    # ROE
-    roe = (annual_net_income / down_payment) * 100
+    annual_rent_conservative = monthly_rent_conservative * 12
+    annual_rent_optimistic = monthly_rent_optimistic * 12
+    
+    # Net cash flow
+    annual_net_cashflow_conservative = annual_rent_conservative - annual_costs
+    annual_net_cashflow_optimistic = annual_rent_optimistic - annual_costs
+    annual_net_cashflow = (annual_net_cashflow_conservative + annual_net_cashflow_optimistic) / 2
+    
+    # ROI range (5 years)
+    roi_conservative = ((annual_net_cashflow_conservative * 5) / total_upfront) * 100
+    roi_optimistic = ((annual_net_cashflow_optimistic * 5) / total_upfront) * 100
+    
+    # ROE range  
+    roe_conservative = (annual_net_cashflow_conservative / total_upfront) * 100
+    roe_optimistic = (annual_net_cashflow_optimistic / total_upfront) * 100
+    
+    # Investment score (1-10 based on multiple factors)
+    roi_score = min(10, max(1, (roi_conservative + roi_optimistic) / 2 / 10))
+    cashflow_score = min(10, max(1, (annual_net_cashflow / (price * 0.01)) * 10))
+    investment_score = int((roi_score + cashflow_score) / 2)
     
     # Appreciation
     yoy_appreciation = 3.5
     projected_5yr_value = price * (1.035 ** 5)
     
-    # Cash-on-cash return
-    cash_on_cash = (annual_net_income / down_payment) * 100
-    
-    # Cap rate (annual NOI / property value)
-    cap_rate = (annual_net_income / price) * 100
-    
-    # Monthly cash flow
-    monthly_cash_flow = monthly_rent_long - monthly_expenses - (price * 0.8 * 0.04 / 12)  # mortgage payment
-    
     # Estimated value
     estimated_value = price * 1.02
     
     return InvestmentMetrics(
-        roi=round(roi, 2),
-        roe=round(roe, 2),
+        investment_score=investment_score,
+        roi_range_min=round(roi_conservative, 1),
+        roi_range_max=round(roi_optimistic, 1),
+        roe_range_min=round(roe_conservative, 1),
+        roe_range_max=round(roe_optimistic, 1),
+        annual_net_cashflow=round(annual_net_cashflow, 0),
         estimated_value=round(estimated_value, 2),
-        short_term_rental_yield=round(short_term_yield, 2),
-        long_term_rental_yield=round(long_term_yield, 2),
         yoy_appreciation=round(yoy_appreciation, 2),
+        projected_5yr_value=round(projected_5yr_value, 2),
+        # Backward compatibility
+        roi=round((roi_conservative + roi_optimistic) / 2, 2),
+        roe=round((roe_conservative + roe_optimistic) / 2, 2),
+        cash_on_cash_return=round(roe_conservative, 2),
+        monthly_cash_flow=round(annual_net_cashflow / 12, 2)
+    )
         projected_5yr_value=round(projected_5yr_value, 2),
         cash_on_cash_return=round(cash_on_cash, 2),
         cap_rate=round(cap_rate, 2),
