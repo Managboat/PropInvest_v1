@@ -139,70 +139,103 @@ class RealEstateAPITester:
             self.log_test("URL Property Analysis", False, str(e))
             return False
 
-    def test_save_analysis(self):
-        """Test saving analysis to portfolio"""
-        if not self.analysis_id:
-            self.log_test("Save Analysis", False, "No analysis ID available from previous test")
-            return False
-            
+    def test_portfolio_endpoint_removed(self):
+        """Test that portfolio endpoint returns 404 (removed)"""
         try:
+            response = requests.get(f"{self.api_url}/portfolio", timeout=10)
+            
+            success = response.status_code == 404
+            details = f"Status: {response.status_code} (expected 404 for removed endpoint)"
+            
+            self.log_test("Portfolio Endpoint Removed", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("Portfolio Endpoint Removed", False, str(e))
+            return False
+
+    def test_seed_sample_data_endpoint_removed(self):
+        """Test that seed-sample-data endpoint returns 404 (removed)"""
+        try:
+            response = requests.post(f"{self.api_url}/seed-sample-data", timeout=10)
+            
+            success = response.status_code == 404
+            details = f"Status: {response.status_code} (expected 404 for removed endpoint)"
+            
+            self.log_test("Seed Sample Data Endpoint Removed", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("Seed Sample Data Endpoint Removed", False, str(e))
+            return False
+
+    def test_investment_score_negative_metrics(self):
+        """Test that investment score is low (max 3) when metrics are negative"""
+        try:
+            # Create a property with conditions that should result in negative metrics
             payload = {
-                "analysis_id": self.analysis_id,
-                "user_notes": "Test property for portfolio"
+                "title": "Expensive Property with High Costs",
+                "location": "Milan, Lombardy", 
+                "price": 1000000,  # Very high price
+                "property_type": "Apartment",
+                "size_sqm": 50,    # Small size = high price per sqm
+                "rooms": 1,
+                "bathrooms": 1,
+                "purchase_details": {
+                    "mortgage_percentage": 90,  # High leverage
+                    "mortgage_rate": 6.0,      # High interest rate
+                    "mortgage_years": 30,
+                    "is_first_home": False,    # Higher taxes
+                    "purchase_tax_rate": 9,    # High tax rate
+                    "notary_fees": 5000,
+                    "agency_fees_percentage": 5,  # High fees
+                    "annual_property_tax": 8000,  # High property tax
+                    "maintenance_percentage": 3   # High maintenance
+                }
             }
             
             response = requests.post(
-                f"{self.api_url}/save-analysis", 
+                f"{self.api_url}/analyze", 
                 json=payload, 
                 headers={'Content-Type': 'application/json'},
-                timeout=10
+                timeout=30
             )
             
             success = response.status_code == 200
             
             if success:
                 data = response.json()
-                has_message = "message" in data and "id" in data
-                success = has_message
-                details = f"Saved analysis: {data.get('id', 'N/A')}"
-            else:
-                details = f"Status: {response.status_code}, Response: {response.text[:200]}"
+                metrics = data.get("metrics", {})
                 
-            self.log_test("Save Analysis", success, details)
-            return success
-            
-        except Exception as e:
-            self.log_test("Save Analysis", False, str(e))
-            return False
-
-    def test_get_portfolio(self):
-        """Test retrieving portfolio"""
-        try:
-            response = requests.get(f"{self.api_url}/portfolio", timeout=10)
-            
-            success = response.status_code == 200
-            
-            if success:
-                data = response.json()
-                is_list = isinstance(data, list)
+                investment_score = metrics.get("investment_score", 10)
+                annual_net_cashflow = metrics.get("annual_net_cashflow", 0)
+                roi_min = metrics.get("roi_range_min", 0)
+                roi_max = metrics.get("roi_range_max", 0)
+                roe_min = metrics.get("roe_range_min", 0)
+                roe_max = metrics.get("roe_range_max", 0)
                 
-                if is_list and len(data) > 0:
-                    # Check structure of portfolio items
-                    first_item = data[0]
-                    has_analysis = "analysis" in first_item
-                    success = has_analysis
-                    details = f"Portfolio items: {len(data)}, First item has analysis: {has_analysis}"
+                # Check if any metrics are negative
+                has_negative_cashflow = annual_net_cashflow < 0
+                has_negative_roi = (roi_min + roi_max) / 2 < 0
+                has_negative_roe = (roe_min + roe_max) / 2 < 0
+                
+                # If any metric is negative, score should be <= 3
+                if has_negative_cashflow or has_negative_roi or has_negative_roe:
+                    success = investment_score <= 3
+                    details = f"Score: {investment_score}/10, Cash Flow: €{annual_net_cashflow:,.0f}, ROI: {roi_min}-{roi_max}%, ROE: {roe_min}-{roe_max}%"
                 else:
-                    success = is_list  # Empty portfolio is valid
-                    details = f"Portfolio items: {len(data) if is_list else 'Not a list'}"
+                    # If no negative metrics, test passed but note it
+                    success = True
+                    details = f"No negative metrics found. Score: {investment_score}/10, Cash Flow: €{annual_net_cashflow:,.0f}"
+                    
             else:
                 details = f"Status: {response.status_code}, Response: {response.text[:200]}"
                 
-            self.log_test("Get Portfolio", success, details)
+            self.log_test("Investment Score Negative Metrics Logic", success, details)
             return success
             
         except Exception as e:
-            self.log_test("Get Portfolio", False, str(e))
+            self.log_test("Investment Score Negative Metrics Logic", False, str(e))
             return False
 
     def test_invalid_requests(self):
