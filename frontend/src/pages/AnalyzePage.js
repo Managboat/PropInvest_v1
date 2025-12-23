@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Link2, FileInput, ArrowLeft, Loader2 } from 'lucide-react';
+import { Link2, FileInput, ArrowLeft, Loader2, Building2 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
@@ -18,10 +18,8 @@ const AnalyzePage = () => {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('url');
   
-  // URL input
   const [url, setUrl] = useState('');
   
-  // Manual input
   const [manualData, setManualData] = useState({
     title: '',
     location: '',
@@ -29,7 +27,9 @@ const AnalyzePage = () => {
     property_type: 'Apartment',
     size_sqm: '',
     rooms: '',
-    bathrooms: ''
+    bathrooms: '',
+    monthly_expenses: '',
+    renovation_needed: false
   });
 
   const handleUrlAnalysis = async () => {
@@ -42,7 +42,6 @@ const AnalyzePage = () => {
     try {
       const response = await axios.post(`${API}/analyze`, { url });
       toast.success('Property analyzed successfully!');
-      // Navigate to results with the analysis data
       navigate('/results/new', { state: { analysis: response.data } });
     } catch (error) {
       console.error('Analysis error:', error);
@@ -54,7 +53,7 @@ const AnalyzePage = () => {
 
   const handleManualAnalysis = async () => {
     if (!manualData.title || !manualData.location || !manualData.price) {
-      toast.error('Please fill in all required fields (title, location, price)');
+      toast.error('Please fill in all required fields');
       return;
     }
 
@@ -67,7 +66,9 @@ const AnalyzePage = () => {
         property_type: manualData.property_type,
         size_sqm: manualData.size_sqm ? parseFloat(manualData.size_sqm) : 80,
         rooms: manualData.rooms ? parseInt(manualData.rooms) : null,
-        bathrooms: manualData.bathrooms ? parseInt(manualData.bathrooms) : null
+        bathrooms: manualData.bathrooms ? parseInt(manualData.bathrooms) : null,
+        monthly_expenses: manualData.monthly_expenses ? parseFloat(manualData.monthly_expenses) : null,
+        renovation_needed: manualData.renovation_needed
       };
 
       const response = await axios.post(`${API}/analyze`, payload);
@@ -82,20 +83,26 @@ const AnalyzePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F2EB]">
+    <div className="min-h-screen bg-gray-50">
       {/* Navigation */}
-      <nav className="bg-white/70 backdrop-blur-xl border-b border-[#1A3C34]/5">
+      <nav className="bg-white border-b border-gray-200">
         <div className="px-4 md:px-8 lg:px-12 max-w-7xl mx-auto">
-          <div className="flex items-center justify-between h-20">
-            <Button
-              data-testid="back-button"
-              variant="ghost"
-              onClick={() => navigate('/')}
-              className="text-[#1A3C34] hover:bg-[#1A3C34]/5"
-            >
-              <ArrowLeft className="w-5 h-5 mr-2" />
-              Back
-            </Button>
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center gap-8">
+              <div className="flex items-center gap-2">
+                <Building2 className="w-7 h-7 text-blue-900" />
+                <span className="text-xl font-bold text-slate-900">PropInvest</span>
+              </div>
+              <Button
+                data-testid="back-button"
+                variant="ghost"
+                onClick={() => navigate('/')}
+                className="text-slate-600 hover:text-slate-900"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back
+              </Button>
+            </div>
           </div>
         </div>
       </nav>
@@ -108,27 +115,27 @@ const AnalyzePage = () => {
           className="space-y-8"
         >
           <div className="text-center space-y-4">
-            <h1 className="font-serif text-4xl md:text-6xl font-medium tracking-tight text-[#1A3C34]">
+            <h1 className="text-4xl md:text-5xl font-bold text-slate-900">
               Analyze a Property
             </h1>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-              Enter a property URL from immobiliare.it or manually input property details
+            <p className="text-lg text-slate-600">
+              Enter a property URL or manually input details
             </p>
           </div>
 
-          <Card className="border-[#1A3C34]/5 shadow-lg">
+          <Card className="border-gray-200 shadow-lg">
             <CardHeader>
-              <CardTitle className="font-serif text-2xl">Property Information</CardTitle>
+              <CardTitle className="text-2xl font-bold">Property Information</CardTitle>
               <CardDescription>Choose your input method</CardDescription>
             </CardHeader>
             <CardContent>
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                 <TabsList className="grid w-full grid-cols-2 mb-8">
-                  <TabsTrigger value="url" data-testid="url-tab">
+                  <TabsTrigger value="url" data-testid="url-tab" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
                     <Link2 className="w-4 h-4 mr-2" />
                     URL Import
                   </TabsTrigger>
-                  <TabsTrigger value="manual" data-testid="manual-tab">
+                  <TabsTrigger value="manual" data-testid="manual-tab" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
                     <FileInput className="w-4 h-4 mr-2" />
                     Manual Entry
                   </TabsTrigger>
@@ -144,10 +151,10 @@ const AnalyzePage = () => {
                       placeholder="https://www.immobiliare.it/..."
                       value={url}
                       onChange={(e) => setUrl(e.target.value)}
-                      className="bg-white border-0 ring-1 ring-[#1A3C34]/10 focus:ring-2 focus:ring-[#1A3C34] rounded-xl px-4 py-6 text-lg shadow-inner"
+                      className="h-12"
                     />
                     <p className="text-sm text-slate-500">
-                      Paste a link from immobiliare.it and we'll extract all the details automatically
+                      Paste a link from immobiliare.it and we'll extract all details
                     </p>
                   </div>
 
@@ -155,7 +162,7 @@ const AnalyzePage = () => {
                     data-testid="analyze-url-button"
                     onClick={handleUrlAnalysis}
                     disabled={loading}
-                    className="w-full bg-[#1A3C34] text-white hover:bg-[#142E28] rounded-full px-8 py-6 text-lg font-medium transition-all hover:scale-105 active:scale-95 shadow-xl"
+                    className="w-full bg-blue-600 text-white hover:bg-blue-700 h-12 text-base font-semibold"
                   >
                     {loading ? (
                       <>
@@ -178,7 +185,6 @@ const AnalyzePage = () => {
                         placeholder="e.g., Charming Apartment in Milan"
                         value={manualData.title}
                         onChange={(e) => setManualData({ ...manualData, title: e.target.value })}
-                        className="bg-white border-0 ring-1 ring-[#1A3C34]/10 focus:ring-2 focus:ring-[#1A3C34] rounded-xl px-4 py-3"
                       />
                     </div>
 
@@ -187,10 +193,9 @@ const AnalyzePage = () => {
                       <Input
                         id="location"
                         data-testid="location-input"
-                        placeholder="e.g., Milan, Lombardy"
+                        placeholder="Milan, Lombardy"
                         value={manualData.location}
                         onChange={(e) => setManualData({ ...manualData, location: e.target.value })}
-                        className="bg-white border-0 ring-1 ring-[#1A3C34]/10 focus:ring-2 focus:ring-[#1A3C34] rounded-xl px-4 py-3"
                       />
                     </div>
 
@@ -203,12 +208,11 @@ const AnalyzePage = () => {
                         placeholder="250000"
                         value={manualData.price}
                         onChange={(e) => setManualData({ ...manualData, price: e.target.value })}
-                        className="bg-white border-0 ring-1 ring-[#1A3C34]/10 focus:ring-2 focus:ring-[#1A3C34] rounded-xl px-4 py-3"
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="size">Size (sqm)</Label>
+                      <Label htmlFor="size">Size (sqm) *</Label>
                       <Input
                         id="size"
                         data-testid="size-input"
@@ -216,7 +220,18 @@ const AnalyzePage = () => {
                         placeholder="85"
                         value={manualData.size_sqm}
                         onChange={(e) => setManualData({ ...manualData, size_sqm: e.target.value })}
-                        className="bg-white border-0 ring-1 ring-[#1A3C34]/10 focus:ring-2 focus:ring-[#1A3C34] rounded-xl px-4 py-3"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="monthly_expenses">Monthly Expenses (€)</Label>
+                      <Input
+                        id="monthly_expenses"
+                        data-testid="monthly-expenses-input"
+                        type="number"
+                        placeholder="500"
+                        value={manualData.monthly_expenses}
+                        onChange={(e) => setManualData({ ...manualData, monthly_expenses: e.target.value })}
                       />
                     </div>
 
@@ -229,7 +244,6 @@ const AnalyzePage = () => {
                         placeholder="3"
                         value={manualData.rooms}
                         onChange={(e) => setManualData({ ...manualData, rooms: e.target.value })}
-                        className="bg-white border-0 ring-1 ring-[#1A3C34]/10 focus:ring-2 focus:ring-[#1A3C34] rounded-xl px-4 py-3"
                       />
                     </div>
 
@@ -242,7 +256,6 @@ const AnalyzePage = () => {
                         placeholder="2"
                         value={manualData.bathrooms}
                         onChange={(e) => setManualData({ ...manualData, bathrooms: e.target.value })}
-                        className="bg-white border-0 ring-1 ring-[#1A3C34]/10 focus:ring-2 focus:ring-[#1A3C34] rounded-xl px-4 py-3"
                       />
                     </div>
 
@@ -253,13 +266,25 @@ const AnalyzePage = () => {
                         data-testid="property-type-select"
                         value={manualData.property_type}
                         onChange={(e) => setManualData({ ...manualData, property_type: e.target.value })}
-                        className="w-full bg-white border-0 ring-1 ring-[#1A3C34]/10 focus:ring-2 focus:ring-[#1A3C34] rounded-xl px-4 py-3"
+                        className="w-full h-10 px-3 rounded-md border border-gray-300 bg-white"
                       >
                         <option>Apartment</option>
                         <option>House</option>
                         <option>Villa</option>
                         <option>Studio</option>
+                        <option>Penthouse</option>
                       </select>
+                    </div>
+
+                    <div className="md:col-span-2 flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id="renovation"
+                        checked={manualData.renovation_needed}
+                        onChange={(e) => setManualData({ ...manualData, renovation_needed: e.target.checked })}
+                        className="w-4 h-4"
+                      />
+                      <Label htmlFor="renovation" className="cursor-pointer">Property needs renovation</Label>
                     </div>
                   </div>
 
@@ -267,7 +292,7 @@ const AnalyzePage = () => {
                     data-testid="analyze-manual-button"
                     onClick={handleManualAnalysis}
                     disabled={loading}
-                    className="w-full bg-[#1A3C34] text-white hover:bg-[#142E28] rounded-full px-8 py-6 text-lg font-medium transition-all hover:scale-105 active:scale-95 shadow-xl"
+                    className="w-full bg-blue-600 text-white hover:bg-blue-700 h-12 text-base font-semibold"
                   >
                     {loading ? (
                       <>
