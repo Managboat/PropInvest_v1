@@ -15,16 +15,16 @@ const PricingPage = () => {
       price: '9.90',
       icon: <Sparkles className="w-8 h-8" />,
       color: 'from-slate-600 to-slate-700',
-      description: 'Perfect for getting started',
+      description: 'Ideale per iniziare',
       features: [
-        'View all 4 investment strategies',
-        'Complete financial projections',
-        'ROI, ROE, and cash flow analysis',
-        'AI-powered property valuation',
-        'Investment quality score (1-10)',
-        'Save analyses to portfolio'
+        'Visualizza tutte le 4 strategie d\'investimento',
+        'Proiezioni finanziarie complete',
+        'Analisi ROI, ROE e cash flow',
+        'Valutazione immobiliare AI',
+        'Punteggio qualità investimento (1-10)',
+        'Salva analisi nel portfolio'
       ],
-      cta: 'Get Base',
+      cta: 'Scegli Base',
       badge: null
     },
     {
@@ -32,55 +32,55 @@ const PricingPage = () => {
       price: '29.90',
       icon: <Crown className="w-8 h-8" />,
       color: 'from-blue-900 to-blue-800',
-      description: 'Most popular for serious investors',
+      description: 'Il più popolare per investitori seri',
       features: [
-        'Everything in Base, plus:',
-        'Detailed business plan for each strategy',
-        'Editable revenue & cost projections',
-        'Complete cost breakdown (taxes, notary, fees)',
-        'Annual profit/loss statements',
-        'Add or remove custom cost lines',
-        'Export business plans to PDF'
+        'Tutto in Base, più:',
+        'Business plan dettagliato per ogni strategia',
+        'Proiezioni ricavi e costi modificabili',
+        'Ripartizione completa costi (tasse, notaio, commissioni)',
+        'Conto economico annuale',
+        'Aggiungi o rimuovi voci di costo',
+        'Esporta business plan in PDF'
       ],
-      cta: 'Get Premium',
-      badge: 'POPULAR'
+      cta: 'Scegli Premium',
+      badge: 'POPOLARE'
     },
     {
       name: 'Pro',
       price: '79.90',
       icon: <Rocket className="w-8 h-8" />,
       color: 'from-blue-800 to-slate-800',
-      description: 'For investors who want expert guidance',
+      description: 'Per chi vuole guida esperta',
       features: [
-        'Everything in Premium, plus:',
-        '15-minute video consultation',
-        'Review your analysis with expert',
-        'Get personalized recommendations',
-        'Strategy selection guidance',
-        'Risk mitigation advice',
-        'Priority email support'
+        'Tutto in Premium, più:',
+        'Consulenza video di 15 minuti',
+        'Revisione analisi con esperto',
+        'Raccomandazioni personalizzate',
+        'Guida nella scelta strategia',
+        'Consigli mitigazione rischi',
+        'Supporto email prioritario'
       ],
-      cta: 'Get Pro',
+      cta: 'Scegli Pro',
       badge: null
     },
     {
       name: 'Executive',
       price: '2-4%',
-      priceSubtext: 'of investment value',
+      priceSubtext: 'del valore investimento',
       icon: <Briefcase className="w-8 h-8" />,
       color: 'from-slate-900 to-blue-900',
-      description: 'Full-service investment management',
+      description: 'Gestione investimento completa',
       features: [
-        'Everything in Pro, plus:',
-        'Complete project planning',
-        'Implementation management',
-        'Vendor coordination',
-        'Renovation oversight (if needed)',
-        'Property management setup',
-        'Ongoing support & monitoring',
-        'Dedicated account manager'
+        'Tutto in Pro, più:',
+        'Pianificazione progetto completa',
+        'Gestione implementazione',
+        'Coordinamento fornitori',
+        'Supervisione ristrutturazione (se necessaria)',
+        'Setup gestione immobiliare',
+        'Supporto e monitoraggio continuo',
+        'Account manager dedicato'
       ],
-      cta: 'Contact Sales',
+      cta: 'Contatta Vendite',
       badge: 'ENTERPRISE'
     }
   ];
@@ -102,7 +102,7 @@ const PricingPage = () => {
                 className="text-slate-600 hover:text-slate-900"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Home
+                Indietro
               </Button>
             </div>
           </div>
@@ -117,10 +117,10 @@ const PricingPage = () => {
           className="text-center space-y-6 mb-16"
         >
           <h1 className="text-4xl md:text-6xl font-bold text-slate-900">
-            Choose Your Plan
+            Scegli Il Tuo Piano
           </h1>
           <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-            Unlock advanced features and expert guidance to maximize your real estate investments
+            Sblocca funzionalità avanzate e guida esperta per massimizzare i tuoi investimenti immobiliari
           </p>
         </motion.div>
 
@@ -152,7 +152,7 @@ const PricingPage = () => {
                   <div className="mt-4">
                     <div className="flex items-baseline gap-1">
                       <span className="text-4xl font-bold text-slate-900">€{plan.price}</span>
-                      {!plan.priceSubtext && <span className="text-slate-600">one-time</span>}
+                      {!plan.priceSubtext && <span className="text-slate-600">una tantum</span>}
                     </div>
                     {plan.priceSubtext && (
                       <div className="text-sm text-slate-600 mt-1">{plan.priceSubtext}</div>
@@ -196,41 +196,41 @@ const PricingPage = () => {
           transition={{ delay: 0.5 }}
           className="mt-20"
         >
-          <h2 className="text-3xl font-bold text-slate-900 text-center mb-8">Frequently Asked Questions</h2>
+          <h2 className="text-3xl font-bold text-slate-900 text-center mb-8">Domande Frequenti</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
             <Card className="border-gray-200 bg-white">
               <CardHeader>
-                <CardTitle className="text-lg">Can I upgrade later?</CardTitle>
+                <CardTitle className="text-lg">Posso fare upgrade in seguito?</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-slate-600">Yes! You can upgrade to any plan at any time. You'll only pay the difference.</p>
+                <p className="text-slate-600">Sì! Puoi fare upgrade a qualsiasi piano in qualsiasi momento. Pagherai solo la differenza.</p>
               </CardContent>
             </Card>
             
             <Card className="border-gray-200 bg-white">
               <CardHeader>
-                <CardTitle className="text-lg">Are these one-time payments?</CardTitle>
+                <CardTitle className="text-lg">Sono pagamenti una tantum?</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-slate-600">Yes, Base, Premium, and Pro are one-time payments per property analysis. Executive is project-based.</p>
+                <p className="text-slate-600">Sì, Base, Premium e Pro sono pagamenti una tantum per analisi immobiliare. Executive è basato sul progetto.</p>
               </CardContent>
             </Card>
             
             <Card className="border-gray-200 bg-white">
               <CardHeader>
-                <CardTitle className="text-lg">What's included in the consultation?</CardTitle>
+                <CardTitle className="text-lg">Cosa include la consulenza?</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-slate-600">Pro plan includes a 15-minute video call with a real estate investment expert to review your analysis and provide recommendations.</p>
+                <p className="text-slate-600">Il piano Pro include una videochiamata di 15 minuti con un esperto di investimenti immobiliari per rivedere la tua analisi e fornire raccomandazioni.</p>
               </CardContent>
             </Card>
             
             <Card className="border-gray-200 bg-white">
               <CardHeader>
-                <CardTitle className="text-lg">How does Executive pricing work?</CardTitle>
+                <CardTitle className="text-lg">Come funziona il pricing Executive?</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-slate-600">Executive is 2-4% of your total investment value, based on project scope and complexity. Contact us for a custom quote.</p>
+                <p className="text-slate-600">Executive è il 2-4% del valore totale dell'investimento, basato su portata e complessità del progetto. Contattaci per un preventivo personalizzato.</p>
               </CardContent>
             </Card>
           </div>
@@ -245,13 +245,13 @@ const PricingPage = () => {
         >
           <Card className="border-gray-200 bg-gradient-to-br from-blue-50 to-white p-8">
             <CardContent>
-              <h3 className="text-2xl font-bold text-slate-900 mb-4">Not sure which plan is right for you?</h3>
-              <p className="text-slate-600 mb-6">Start with Base and upgrade anytime as your needs grow.</p>
+              <h3 className="text-2xl font-bold text-slate-900 mb-4">Non sai quale piano è giusto per te?</h3>
+              <p className="text-slate-600 mb-6">Inizia con Base e fai upgrade quando vuoi man mano che le tue esigenze crescono.</p>
               <Button 
                 onClick={() => navigate('/analyze')}
                 className="bg-blue-900 text-white hover:bg-blue-800 px-8 py-6 text-lg font-semibold"
               >
-                Start Free Analysis
+                Inizia Analisi Gratuita
               </Button>
             </CardContent>
           </Card>
