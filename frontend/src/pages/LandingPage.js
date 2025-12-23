@@ -79,7 +79,7 @@ const LandingPage = () => {
 
       {/* Hero Section */}
       <section className="pt-24 pb-16 md:pt-32 md:pb-24 px-4 md:px-8 lg:px-12 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
           {/* Left Content */}
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
