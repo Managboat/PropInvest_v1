@@ -713,7 +713,9 @@ async def seed_sample_data():
                 monthly_expenses=prop["monthly_expenses"]
             )
             
-            metrics = await calculate_metrics(property_data)
+            # Use default purchase details for sample data
+            default_purchase = PurchaseDetails()
+            metrics = await calculate_metrics(property_data, default_purchase)
             strategies = await generate_strategies(property_data, metrics)
             
             analysis = AnalysisResult(
