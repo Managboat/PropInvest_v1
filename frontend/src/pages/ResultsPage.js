@@ -59,10 +59,10 @@ const ResultsPage = () => {
   };
 
   const getScoreLabel = (score) => {
-    if (score >= 8) return 'Excellent Investment';
-    if (score >= 6) return 'Good Investment';
-    if (score >= 4) return 'Fair Investment';
-    return 'Risky Investment';
+    if (score >= 8) return 'Investimento Eccellente';
+    if (score >= 6) return 'Buon Investimento';
+    if (score >= 4) return 'Investimento Discreto';
+    return 'Investimento Rischioso';
   };
 
   return (
@@ -138,30 +138,30 @@ const ResultsPage = () => {
                     €{property_data.price.toLocaleString()}
                   </div>
                   <div className="text-sm text-slate-600 mt-1">
-                    €{(property_data.price / property_data.size_sqm).toFixed(0)}/sqm
+                    €{(property_data.price / property_data.size_sqm).toFixed(0)}/mq
                   </div>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-6 border-t border-gray-200">
                 <div className="space-y-1">
-                  <div className="text-sm text-slate-600">Size</div>
-                  <div className="text-xl font-bold text-slate-900">{property_data.size_sqm} sqm</div>
+                  <div className="text-sm text-slate-600">Superficie</div>
+                  <div className="text-xl font-bold text-slate-900">{property_data.size_sqm} mq</div>
                 </div>
                 {property_data.rooms && (
                   <div className="space-y-1">
-                    <div className="text-sm text-slate-600">Rooms</div>
+                    <div className="text-sm text-slate-600">Locali</div>
                     <div className="text-xl font-bold text-slate-900">{property_data.rooms}</div>
                   </div>
                 )}
                 {property_data.bathrooms && (
                   <div className="space-y-1">
-                    <div className="text-sm text-slate-600">Bathrooms</div>
+                    <div className="text-sm text-slate-600">Bagni</div>
                     <div className="text-xl font-bold text-slate-900">{property_data.bathrooms}</div>
                   </div>
                 )}
                 <div className="space-y-1">
-                  <div className="text-sm text-slate-600">Type</div>
+                  <div className="text-sm text-slate-600">Tipo</div>
                   <div className="text-xl font-bold text-slate-900">{property_data.property_type}</div>
                 </div>
               </div>
@@ -223,7 +223,7 @@ const ResultsPage = () => {
               <CardHeader className="pb-3">
                 <CardDescription className="text-slate-600 flex items-center gap-2">
                   <TrendingUp className="w-4 h-4" />
-                  Return on Investment (5 years)
+                  ROI (5 anni)
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -231,7 +231,7 @@ const ResultsPage = () => {
                   {metrics.roi_range_min}% - {metrics.roi_range_max}%
                 </div>
                 <div className="text-sm text-slate-600">
-                  Scenario range: worst to best case
+                  Range scenario: pessimista - ottimista
                 </div>
               </CardContent>
             </Card>
@@ -241,7 +241,7 @@ const ResultsPage = () => {
               <CardHeader className="pb-3">
                 <CardDescription className="text-slate-600 flex items-center gap-2">
                   <TrendingUp className="w-4 h-4" />
-                  Return on Equity (Annual)
+                  ROE (Annuale)
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -249,7 +249,7 @@ const ResultsPage = () => {
                   {metrics.roe_range_min}% - {metrics.roe_range_max}%
                 </div>
                 <div className="text-sm text-slate-600">
-                  Annual return on your equity
+                  Rendimento annuale sul capitale proprio
                 </div>
               </CardContent>
             </Card>
@@ -259,7 +259,7 @@ const ResultsPage = () => {
               <CardHeader className="pb-3">
                 <CardDescription className="text-slate-600 flex items-center gap-2">
                   <Euro className="w-4 h-4" />
-                  Annual Net Cash Flow
+                  Cash Flow Netto Annuale
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -269,7 +269,7 @@ const ResultsPage = () => {
                   €{metrics.annual_net_cashflow.toLocaleString()}
                 </div>
                 <div className="text-sm text-slate-600">
-                  After all expenses and mortgage
+                  Al netto di spese e mutuo
                 </div>
               </CardContent>
             </Card>
@@ -288,25 +288,25 @@ const ResultsPage = () => {
               <CardHeader className="pb-3">
                 <CardDescription className="text-slate-600 flex items-center gap-2">
                   <Calendar className="w-4 h-4" />
-                  Property Appreciation
+                  Apprezzamento Immobile
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="flex items-baseline gap-4">
                   <div>
                     <div className="text-3xl font-bold text-blue-900">{metrics.yoy_appreciation}%</div>
-                    <div className="text-xs text-slate-600">Annual growth</div>
+                    <div className="text-xs text-slate-600">Crescita annuale</div>
                   </div>
                   <div className="text-2xl text-slate-400">→</div>
                   <div>
                     <div className="text-3xl font-bold text-slate-900">
                       €{(metrics.projected_5yr_value / 1000).toFixed(0)}k
                     </div>
-                    <div className="text-xs text-slate-600">5-year value</div>
+                    <div className="text-xs text-slate-600">Valore a 5 anni</div>
                   </div>
                 </div>
                 <div className="text-sm text-blue-600 mt-3">
-                  +€{((metrics.projected_5yr_value - property_data.price) / 1000).toFixed(0)}k projected gain
+                  +€{((metrics.projected_5yr_value - property_data.price) / 1000).toFixed(0)}k guadagno previsto
                 </div>
               </CardContent>
             </Card>
@@ -316,7 +316,7 @@ const ResultsPage = () => {
               <CardHeader className="pb-3">
                 <CardDescription className="text-slate-600 flex items-center gap-2">
                   <Home className="w-4 h-4" />
-                  AI Estimated Value
+                  Valore Stimato AI
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -324,7 +324,7 @@ const ResultsPage = () => {
                   €{metrics.estimated_value.toLocaleString()}
                 </div>
                 <div className="text-sm text-slate-600 mt-2">
-                  Based on market analysis and comparable properties
+                  Basato su analisi di mercato e proprietà comparabili
                 </div>
               </CardContent>
             </Card>
@@ -341,7 +341,7 @@ const ResultsPage = () => {
             <CardHeader>
               <CardTitle className="text-2xl font-bold flex items-center gap-2 text-blue-900">
                 <Home className="w-6 h-6" />
-                AI Market Analysis
+                Analisi di Mercato AI
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -375,7 +375,7 @@ const ResultsPage = () => {
                 <CardHeader>
                   <div className="flex items-start justify-between mb-3">
                     <Badge className={`${getRiskColor(strategy.risk_level)} font-semibold border`}>
-                      {strategy.risk_level.toUpperCase()} RISK
+                      RISCHIO {strategy.risk_level === 'low' ? 'BASSO' : strategy.risk_level === 'medium' ? 'MEDIO' : strategy.risk_level === 'medium-high' ? 'MEDIO-ALTO' : 'ALTO'}
                     </Badge>
                   </div>
                   <CardTitle className={`text-2xl font-bold ${strategy.is_premium ? 'text-white' : 'text-slate-900'}`}>
@@ -390,28 +390,28 @@ const ResultsPage = () => {
                     <>
                       <div className="grid grid-cols-2 gap-4 pb-4 border-b border-gray-200">
                         <div>
-                          <div className="text-xs text-slate-600 mb-1">Expected Return</div>
+                          <div className="text-xs text-slate-600 mb-1">Rendimento Atteso</div>
                           <div className="font-bold text-slate-900">{strategy.expected_return}</div>
                         </div>
                         <div>
-                          <div className="text-xs text-slate-600 mb-1">Time Horizon</div>
+                          <div className="text-xs text-slate-600 mb-1">Orizzonte Temporale</div>
                           <div className="font-bold text-slate-900">{strategy.time_horizon}</div>
                         </div>
                       </div>
                       
                       <div className="space-y-3">
                         <div>
-                          <div className="text-xs text-slate-600 mb-1">Initial Investment</div>
+                          <div className="text-xs text-slate-600 mb-1">Investimento Iniziale</div>
                           <div className="font-bold text-blue-900">{strategy.initial_investment}</div>
                         </div>
                         <div>
-                          <div className="text-xs text-slate-600 mb-1">Estimated Income</div>
+                          <div className="text-xs text-slate-600 mb-1">Reddito Stimato</div>
                           <div className="font-bold text-blue-600">{strategy.monthly_income}</div>
                         </div>
                       </div>
 
                       <div className="pt-4 border-t border-gray-200">
-                        <div className="text-xs font-semibold text-slate-600 mb-3">KEY POINTS</div>
+                        <div className="text-xs font-semibold text-slate-600 mb-3">PUNTI CHIAVE</div>
                         <ul className="space-y-2">
                           {strategy.key_points.map((point, i) => (
                             <li key={i} className="flex items-start gap-2 text-sm">
@@ -429,15 +429,15 @@ const ResultsPage = () => {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                         </svg>
                       </div>
-                      <h3 className="text-lg font-bold text-white mb-2">Premium Strategy</h3>
+                      <h3 className="text-lg font-bold text-white mb-2">Strategia Premium</h3>
                       <p className="text-blue-100 mb-6 text-sm">
-                        Unlock detailed implementation plans and financial projections
+                        Sblocca piani di implementazione dettagliati e proiezioni finanziarie
                       </p>
                       <Button 
                         className="bg-white text-blue-900 hover:bg-gray-100 font-semibold"
                         onClick={() => navigate('/pricing')}
                       >
-                        View Pricing Plans
+                        Vedi Piani
                       </Button>
                     </div>
                   )}
