@@ -127,7 +127,7 @@ const AnalyzePage = () => {
                 className="text-slate-600 hover:text-slate-900"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Back
+                Indietro
               </Button>
             </div>
           </div>
@@ -368,25 +368,25 @@ const AnalyzePage = () => {
                     <CardHeader>
                       <CardTitle className="text-xl font-bold text-blue-900 flex items-center gap-2">
                         <Home className="w-5 h-5" />
-                        Property Summary
+                        Riepilogo Proprietà
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <div>
-                          <div className="text-sm text-slate-600">Price</div>
+                          <div className="text-sm text-slate-600">Prezzo</div>
                           <div className="text-lg font-bold text-slate-900">€{extractedProperty.price?.toLocaleString()}</div>
                         </div>
                         <div>
-                          <div className="text-sm text-slate-600">Size</div>
-                          <div className="text-lg font-bold text-slate-900">{extractedProperty.size_sqm} sqm</div>
+                          <div className="text-sm text-slate-600">Superficie</div>
+                          <div className="text-lg font-bold text-slate-900">{extractedProperty.size_sqm} mq</div>
                         </div>
                         <div>
-                          <div className="text-sm text-slate-600">Rooms</div>
+                          <div className="text-sm text-slate-600">Locali</div>
                           <div className="text-lg font-bold text-slate-900">{extractedProperty.rooms || 'N/A'}</div>
                         </div>
                         <div>
-                          <div className="text-sm text-slate-600">Type</div>
+                          <div className="text-sm text-slate-600">Tipo</div>
                           <div className="text-lg font-bold text-slate-900">{extractedProperty.property_type}</div>
                         </div>
                       </div>
@@ -429,7 +429,7 @@ const AnalyzePage = () => {
                       </div>
 
                       <div className="space-y-2">
-                        <Label className="text-slate-900">Mortgage Duration (years)</Label>
+                        <Label className="text-slate-900">Durata Mutuo (anni)</Label>
                         <Input
                           type="number"
                           placeholder="25"
@@ -440,19 +440,19 @@ const AnalyzePage = () => {
                       </div>
 
                       <div className="space-y-2">
-                        <Label className="text-slate-900">Property Classification</Label>
+                        <Label className="text-slate-900">Classificazione Immobile</Label>
                         <select
                           value={purchaseDetails.is_first_home ? 'first' : 'second'}
                           onChange={(e) => setPurchaseDetails({...purchaseDetails, is_first_home: e.target.value === 'first', purchase_tax_rate: e.target.value === 'first' ? '2' : '9'})}
                           className="w-full h-10 px-3 rounded-md border border-slate-300 bg-white text-slate-900"
                         >
-                          <option value="first">Prima Casa - 2% Purchase Tax</option>
-                          <option value="second">Seconda Casa - 9% Purchase Tax</option>
+                          <option value="first">Prima Casa - Imposta 2%</option>
+                          <option value="second">Seconda Casa - Imposta 9%</option>
                         </select>
                       </div>
 
                       <div className="space-y-2">
-                        <Label className="text-slate-900">Notary Fees (€)</Label>
+                        <Label className="text-slate-900">Spese Notarili (€)</Label>
                         <Input
                           type="number"
                           placeholder="2000"
@@ -463,7 +463,7 @@ const AnalyzePage = () => {
                       </div>
 
                       <div className="space-y-2">
-                        <Label className="text-slate-900">Real Estate Agency Fees (%)</Label>
+                        <Label className="text-slate-900">Commissione Agenzia (%)</Label>
                         <Input
                           type="number"
                           step="0.1"
@@ -475,7 +475,7 @@ const AnalyzePage = () => {
                       </div>
 
                       <div className="space-y-2">
-                        <Label className="text-slate-900">Annual Property Tax (IMU) (€)</Label>
+                        <Label className="text-slate-900">IMU Annuale (€)</Label>
                         <Input
                           type="number"
                           placeholder="1000"
@@ -486,7 +486,7 @@ const AnalyzePage = () => {
                       </div>
 
                       <div className="space-y-2">
-                        <Label className="text-slate-900">Annual Maintenance (% of value)</Label>
+                        <Label className="text-slate-900">Manutenzione Annuale (% del valore)</Label>
                         <Input
                           type="number"
                           step="0.1"
