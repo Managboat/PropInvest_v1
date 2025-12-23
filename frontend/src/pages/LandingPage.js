@@ -240,17 +240,17 @@ const LandingPage = () => {
           className="bg-gradient-to-br from-blue-900 to-slate-900 rounded-3xl p-12 md:p-16 text-center"
         >
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Ready to Invest Smarter?
+            Pronto a Investire in Modo Più Intelligente?
           </h2>
           <p className="text-lg text-blue-100 mb-8 max-w-2xl mx-auto">
-            Join thousands of investors making data-driven decisions
+            Unisciti a migliaia di investitori che prendono decisioni basate sui dati
           </p>
           <Button
             data-testid="cta-button"
             onClick={() => navigate('/analyze')}
             className="bg-white text-blue-900 hover:bg-gray-100 rounded-lg px-10 py-6 text-lg font-bold transition-all hover:shadow-xl"
           >
-            Analyze Your First Property
+            Analizza La Tua Prima Proprietà
             <ArrowRight className="ml-2 w-5 h-5" />
           </Button>
         </motion.div>
