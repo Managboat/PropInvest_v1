@@ -397,13 +397,13 @@ const AnalyzePage = () => {
                 {/* Purchase Details Form */}
                 <Card className="border-gray-200 shadow-lg bg-white">
                   <CardHeader>
-                    <CardTitle className="text-2xl font-bold text-slate-900">Purchase & Financing Details</CardTitle>
-                    <CardDescription className="text-slate-600">Required for accurate investment analysis</CardDescription>
+                    <CardTitle className="text-2xl font-bold text-slate-900">Dettagli Acquisto e Finanziamento</CardTitle>
+                    <CardDescription className="text-slate-600">Richiesto per analisi accurata</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
-                        <Label className="text-slate-900">Mortgage Financing (%)</Label>
+                        <Label className="text-slate-900">Finanziamento Mutuo (%)</Label>
                         <Input
                           type="number"
                           min="0"
