@@ -120,11 +120,10 @@ const LandingPage = () => {
               </Button>
               
               <Button
-                data-testid="view-portfolio-button"
-                onClick={() => navigate('/portfolio')}
+                onClick={() => navigate('/pricing')}
                 className="bg-white text-slate-900 border-2 border-gray-300 hover:border-gray-400 rounded-lg px-8 py-6 text-lg font-semibold transition-all"
               >
-                Vedi Portfolio
+                Vedi Piani
               </Button>
             </div>
 

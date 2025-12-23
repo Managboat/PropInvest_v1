@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
 import AnalyzePage from './pages/AnalyzePage';
 import ResultsPage from './pages/ResultsPage';
-import PortfolioPage from './pages/PortfolioPage';
 import PricingPage from './pages/PricingPage';
 import { Toaster } from './components/ui/sonner';
 import './App.css';
@@ -16,7 +15,6 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/analyze" element={<AnalyzePage />} />
           <Route path="/results/:analysisId" element={<ResultsPage />} />
-          <Route path="/portfolio" element={<PortfolioPage />} />
           <Route path="/pricing" element={<PricingPage />} />
         </Routes>
       </BrowserRouter>
