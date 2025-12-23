@@ -42,10 +42,10 @@ const ResultsPage = () => {
 
   const getRiskColor = (risk) => {
     switch (risk) {
-      case 'low': return 'bg-green-100 text-green-800 border-green-300';
-      case 'medium': return 'bg-blue-100 text-blue-800 border-blue-300';
-      case 'medium-high': return 'bg-orange-100 text-orange-800 border-orange-300';
-      case 'high': return 'bg-red-100 text-red-800 border-red-300';
+      case 'low': return 'bg-blue-100 text-blue-800 border-blue-300';
+      case 'medium': return 'bg-slate-100 text-slate-800 border-slate-300';
+      case 'medium-high': return 'bg-slate-200 text-slate-800 border-slate-400';
+      case 'high': return 'bg-slate-300 text-slate-900 border-slate-500';
       default: return 'bg-gray-100 text-gray-800 border-gray-300';
     }
   };
@@ -116,7 +116,7 @@ const ResultsPage = () => {
               </div>
             )}
             
-            <CardContent className="p-6 md:p-8">
+            <CardContent className="p-6 md:p-8 bg-white">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-6">
                 <div>
                   <div className="text-4xl md:text-5xl font-bold text-blue-900">
@@ -217,7 +217,7 @@ const ResultsPage = () => {
                 <CardDescription className="text-slate-600">Monthly Cash Flow</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className={`text-4xl font-bold ${metrics.monthly_cash_flow >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                <div className={`text-4xl font-bold ${metrics.monthly_cash_flow >= 0 ? 'text-blue-600' : 'text-slate-600'}`}>
                   €{metrics.monthly_cash_flow.toLocaleString()}
                 </div>
                 <div className="text-sm text-slate-600 mt-2">After expenses</div>
@@ -251,7 +251,7 @@ const ResultsPage = () => {
                 <CardDescription className="text-slate-600">YoY Appreciation</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="text-4xl font-bold text-green-600">{metrics.yoy_appreciation}%</div>
+                <div className="text-4xl font-bold text-blue-700">{metrics.yoy_appreciation}%</div>
                 <div className="text-sm text-slate-600 mt-2">Historical average</div>
               </CardContent>
             </Card>
@@ -265,7 +265,7 @@ const ResultsPage = () => {
                 <div className="text-4xl font-bold text-slate-900">
                   €{(metrics.projected_5yr_value / 1000).toFixed(0)}k
                 </div>
-                <div className="text-sm text-green-600 mt-2">
+                <div className="text-sm text-blue-600 mt-2">
                   +€{((metrics.projected_5yr_value - property_data.price) / 1000).toFixed(0)}k gain
                 </div>
               </CardContent>
@@ -348,7 +348,7 @@ const ResultsPage = () => {
                         </div>
                         <div>
                           <div className="text-xs text-slate-600 mb-1">Monthly Income</div>
-                          <div className="font-bold text-green-600">{strategy.monthly_income}</div>
+                          <div className="font-bold text-blue-600">{strategy.monthly_income}</div>
                         </div>
                       </div>
 

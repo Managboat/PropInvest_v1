@@ -116,7 +116,7 @@ const PortfolioPage = () => {
                   >
                     <Card
                       data-testid={`portfolio-card-${idx}`}
-                      className="border-gray-200 hover:shadow-xl transition-all cursor-pointer group overflow-hidden"
+                      className="border-gray-200 hover:shadow-xl transition-all cursor-pointer group overflow-hidden bg-white"
                       onClick={() => navigate('/results/saved', { state: { analysis } })}
                     >
                       {/* Property Image */}
@@ -167,7 +167,7 @@ const PortfolioPage = () => {
                         </div>
 
                         <div className="flex items-center gap-2 text-sm text-slate-600 pt-2 border-t border-gray-200">
-                          <TrendingUp className="w-4 h-4 text-green-600" />
+                          <TrendingUp className="w-4 h-4 text-blue-600" />
                           <span>{metrics.yoy_appreciation}% annual appreciation</span>
                         </div>
 
