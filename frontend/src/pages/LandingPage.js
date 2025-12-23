@@ -175,7 +175,7 @@ const LandingPage = () => {
               data-testid={`feature-card-${idx}`}
               className="bg-gray-50 rounded-xl p-8 hover:shadow-lg transition-all"
             >
-              <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center mb-4 text-blue-600">
+              <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center mb-4 text-blue-900">
                 {feature.icon}
               </div>
               <h3 className="text-xl font-bold text-slate-900 mb-2">
