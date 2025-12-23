@@ -200,12 +200,14 @@ def extract_property_from_url(url: str) -> Dict:
             'monthly_expenses': 500.0
         }
 
-async def calculate_metrics(property_data: PropertyData, purchase_details: PurchaseDetails) -> InvestmentMetrics:
-    """Calculate investment metrics with purchase details"""
+async def calculate_metrics_with_ai(property_data: PropertyData, purchase_details: PurchaseDetails) -> InvestmentMetrics:
+    """Calculate investment metrics using AI for personalized analysis"""
     price = property_data.price
     size_sqm = property_data.size_sqm
+    location = property_data.location
+    property_type = property_data.property_type
     
-    # Purchase costs
+    # Purchase costs calculations
     mortgage_amount = price * (purchase_details.mortgage_percentage / 100)
     down_payment = price - mortgage_amount
     purchase_tax = price * (purchase_details.purchase_tax_rate / 100)
@@ -224,54 +226,20 @@ async def calculate_metrics(property_data: PropertyData, purchase_details: Purch
     annual_maintenance = price * (purchase_details.maintenance_percentage / 100)
     annual_costs = (monthly_mortgage * 12) + purchase_details.annual_property_tax + annual_maintenance
     
-    # Estimated rental income (conservative and optimistic)
-    monthly_rent_conservative = price * 0.0025  # 0.25%
-    monthly_rent_optimistic = price * 0.0035    # 0.35%
-    
-    annual_rent_conservative = monthly_rent_conservative * 12
-    annual_rent_optimistic = monthly_rent_optimistic * 12
-    
-    # Net cash flow
-    annual_net_cashflow_conservative = annual_rent_conservative - annual_costs
-    annual_net_cashflow_optimistic = annual_rent_optimistic - annual_costs
-    annual_net_cashflow = (annual_net_cashflow_conservative + annual_net_cashflow_optimistic) / 2
-    
-    # ROI range (5 years)
-    roi_conservative = ((annual_net_cashflow_conservative * 5) / total_upfront) * 100
-    roi_optimistic = ((annual_net_cashflow_optimistic * 5) / total_upfront) * 100
-    
-    # ROE range  
-    roe_conservative = (annual_net_cashflow_conservative / total_upfront) * 100
-    roe_optimistic = (annual_net_cashflow_optimistic / total_upfront) * 100
-    
-    # Investment score (1-10 based on multiple factors)
-    roi_score = min(10, max(1, (roi_conservative + roi_optimistic) / 2 / 10))
-    cashflow_score = min(10, max(1, (annual_net_cashflow / (price * 0.01)) * 10))
-    investment_score = int((roi_score + cashflow_score) / 2)
-    
-    # Appreciation
-    yoy_appreciation = 3.5
-    projected_5yr_value = price * (1.035 ** 5)
-    
-    # Estimated value
-    estimated_value = price * 1.02
-    
-    return InvestmentMetrics(
-        investment_score=investment_score,
-        roi_range_min=round(roi_conservative, 1),
-        roi_range_max=round(roi_optimistic, 1),
-        roe_range_min=round(roe_conservative, 1),
-        roe_range_max=round(roe_optimistic, 1),
-        annual_net_cashflow=round(annual_net_cashflow, 0),
-        estimated_value=round(estimated_value, 2),
-        yoy_appreciation=round(yoy_appreciation, 2),
-        projected_5yr_value=round(projected_5yr_value, 2),
+    # Use AI to estimate realistic rental income and returns
+    try:
+        api_key = os.environ.get('EMERGENT_LLM_KEY')
+        session_id = f\"metrics_{property_data.id}\"\n        \n        chat = LlmChat(\n            api_key=api_key,\n            session_id=session_id,\n            system_message=\"You are a real estate investment analyst specializing in Italian properties. Provide realistic, data-driven estimates.\"\n        ).with_model(\"openai\", \"gpt-5.2\")\n        \n        prompt = f\"\"\"\nAnalyze this Italian property investment and provide realistic estimates:\n\nProperty Details:\n- Location: {location}\n- Type: {property_type}\n- Price: €{price:,.0f}\n- Size: {size_sqm} sqm\n- Price per sqm: €{price/size_sqm:.0f}\n\nFinancing:\n- Total upfront investment: €{total_upfront:,.0f}\n- Annual costs (mortgage+tax+maintenance): €{annual_costs:,.0f}\n- Mortgage: {purchase_details.mortgage_percentage}% at {purchase_details.mortgage_rate}%\n- First home: {purchase_details.is_first_home}\n\nProvide ONLY numbers in this exact JSON format:\n{{\n  \"monthly_rent_conservative\": <number>,\n  \"monthly_rent_optimistic\": <number>,\n  \"investment_score\": <1-10>,\n  \"yoy_appreciation\": <percentage>,\n  \"estimated_current_value\": <number>\n}}\n\nConsider:\n- Actual market rental rates for {location}\n- Property type and size\n- Current Italian real estate market conditions\n- Location desirability and demand\n- Price competitiveness vs market\n\"\"\"\n        \n        message = UserMessage(text=prompt)\n        response = await chat.send_message(message)\n        \n        # Parse AI response\n        import json\n        ai_data = json.loads(response)\n        \n        monthly_rent_conservative = ai_data.get('monthly_rent_conservative', price * 0.003)\n        monthly_rent_optimistic = ai_data.get('monthly_rent_optimistic', price * 0.004)\n        investment_score = ai_data.get('investment_score', 5)\n        yoy_appreciation = ai_data.get('yoy_appreciation', 3.5)\n        estimated_value = ai_data.get('estimated_current_value', price * 1.02)\n        \n    except Exception as e:\n        logging.error(f\"AI metrics calculation failed: {e}, using defaults\")\n        # Fallback to reasonable defaults\n        monthly_rent_conservative = price * 0.003  # 0.3%\n        monthly_rent_optimistic = price * 0.004    # 0.4%\n        investment_score = 6\n        yoy_appreciation = 3.5\n        estimated_value = price * 1.02\n    \n    # Calculate returns based on AI rental estimates\n    annual_rent_conservative = monthly_rent_conservative * 12\n    annual_rent_optimistic = monthly_rent_optimistic * 12\n    \n    annual_net_cashflow_conservative = annual_rent_conservative - annual_costs\n    annual_net_cashflow_optimistic = annual_rent_optimistic - annual_costs\n    annual_net_cashflow = (annual_net_cashflow_conservative + annual_net_cashflow_optimistic) / 2\n    \n    # ROI range (5 years)\n    roi_conservative = ((annual_net_cashflow_conservative * 5) / total_upfront) * 100\n    roi_optimistic = ((annual_net_cashflow_optimistic * 5) / total_upfront) * 100\n    \n    # ROE range  \n    roe_conservative = (annual_net_cashflow_conservative / total_upfront) * 100\n    roe_optimistic = (annual_net_cashflow_optimistic / total_upfront) * 100\n    \n    # 5-year projection\n    projected_5yr_value = price * ((1 + yoy_appreciation/100) ** 5)\n    \n    return InvestmentMetrics(\n        investment_score=int(investment_score),\n        roi_range_min=round(roi_conservative, 1),\n        roi_range_max=round(roi_optimistic, 1),\n        roe_range_min=round(roe_conservative, 1),\n        roe_range_max=round(roe_optimistic, 1),\n        annual_net_cashflow=round(annual_net_cashflow, 0),\n        estimated_value=round(estimated_value, 2),\n        yoy_appreciation=round(yoy_appreciation, 2),\n        projected_5yr_value=round(projected_5yr_value, 2),
         # Backward compatibility
         roi=round((roi_conservative + roi_optimistic) / 2, 2),
         roe=round((roe_conservative + roe_optimistic) / 2, 2),
         cash_on_cash_return=round(roe_conservative, 2),
         monthly_cash_flow=round(annual_net_cashflow / 12, 2)
     )
+
+# Keep old function for backward compatibility
+async def calculate_metrics(property_data: PropertyData, purchase_details: PurchaseDetails) -> InvestmentMetrics:
+    return await calculate_metrics_with_ai(property_data, purchase_details)
 
 async def generate_strategies(property_data: PropertyData, metrics: InvestmentMetrics) -> List[InvestmentStrategy]:
     """Generate 4 risk-based investment strategies"""
