@@ -150,7 +150,7 @@ def extract_property_from_url(url: str) -> Dict:
                 price_str = price_match.group().replace('.', '').replace(',', '.')
                 try:
                     price = float(price_str)
-                except:
+                except ValueError:
                     pass
         
         # Extract image
