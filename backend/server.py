@@ -304,9 +304,6 @@ Consider:
     # Calculate total profit over 5 years including appreciation
     capital_appreciation_5yr = price * ((1 + yoy_appreciation/100) ** 5) - price
     
-    # Total return = cumulative cash flow + capital appreciation - total interest paid
-    total_interest_paid_5yr = (monthly_mortgage * 12 * 5) - (mortgage_amount * (1 - (1 / ((1 + monthly_rate) ** (num_payments - 60)))) if num_payments > 60 else 0)
-    
     cumulative_cashflow_conservative_5yr = annual_net_cashflow_conservative * 5
     cumulative_cashflow_optimistic_5yr = annual_net_cashflow_optimistic * 5
     
