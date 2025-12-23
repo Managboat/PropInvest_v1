@@ -60,7 +60,7 @@ const LandingPage = () => {
               <Button 
                 data-testid="nav-analyze-button"
                 onClick={() => navigate('/analyze')}
-                className="bg-blue-600 text-white hover:bg-blue-700 rounded-lg px-6 py-5 font-medium transition-all"
+                className="bg-blue-900 text-white hover:bg-blue-800 rounded-lg px-6 py-5 font-medium transition-all"
               >
                 Start Analysis
               </Button>
