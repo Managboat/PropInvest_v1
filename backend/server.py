@@ -214,13 +214,19 @@ async def calculate_metrics_with_ai(property_data: PropertyData, purchase_detail
     agency_fees = price * (purchase_details.agency_fees_percentage / 100)
     total_upfront = down_payment + purchase_tax + purchase_details.notary_fees + agency_fees
     
-    # Monthly mortgage payment
-    monthly_rate = (purchase_details.mortgage_rate / 100) / 12
-    num_payments = purchase_details.mortgage_years * 12
-    if monthly_rate > 0:
-        monthly_mortgage = mortgage_amount * (monthly_rate * (1 + monthly_rate) ** num_payments) / ((1 + monthly_rate) ** num_payments - 1)
+    # Monthly mortgage payment (0 if cash purchase)
+    if purchase_details.mortgage_percentage > 0:
+        monthly_rate = (purchase_details.mortgage_rate / 100) / 12
+        num_payments = purchase_details.mortgage_years * 12
+        if monthly_rate > 0:
+            monthly_mortgage = mortgage_amount * (monthly_rate * (1 + monthly_rate) ** num_payments) / ((1 + monthly_rate) ** num_payments - 1)
+        else:
+            monthly_mortgage = mortgage_amount / num_payments
     else:
-        monthly_mortgage = mortgage_amount / num_payments
+        # Cash purchase - no mortgage
+        monthly_mortgage = 0
+        monthly_rate = 0
+        num_payments = 0
     
     # Annual costs
     annual_maintenance = price * (purchase_details.maintenance_percentage / 100)
