@@ -177,8 +177,8 @@ const AnalyzePage = () => {
               >
                 <Card className="border-gray-200 shadow-lg bg-white">
                   <CardHeader>
-                    <CardTitle className="text-2xl font-bold text-slate-900">Property Information</CardTitle>
-                    <CardDescription className="text-slate-600">Choose your input method</CardDescription>
+                    <CardTitle className="text-2xl font-bold text-slate-900">Informazioni Proprietà</CardTitle>
+                    <CardDescription className="text-slate-600">Scegli il metodo di input</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
