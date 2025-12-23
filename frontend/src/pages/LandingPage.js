@@ -56,7 +56,15 @@ const LandingPage = () => {
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
+              className="flex items-center gap-4"
             >
+              <Button
+                variant="ghost"
+                onClick={() => navigate('/pricing')}
+                className="text-slate-700 hover:text-slate-900 font-medium"
+              >
+                Pricing
+              </Button>
               <Button 
                 data-testid="nav-analyze-button"
                 onClick={() => navigate('/analyze')}
