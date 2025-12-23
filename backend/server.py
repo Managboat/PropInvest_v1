@@ -334,8 +334,43 @@ Consider:
     # 5-year projection
     projected_5yr_value = price * ((1 + yoy_appreciation/100) ** 5)
     
+    # Adjust investment score based on negative metrics
+    # If cash flow, ROI or ROE are negative, score should be low
+    adjusted_score = investment_score
+    
+    # Penalize for negative annual cash flow
+    if annual_net_cashflow < 0:
+        adjusted_score = min(adjusted_score, 3)  # Cap at 3 if cash flow is negative
+        if annual_net_cashflow < -5000:
+            adjusted_score = min(adjusted_score, 2)  # Very negative cash flow
+    
+    # Penalize for negative ROI
+    avg_roi = (roi_conservative + roi_optimistic) / 2
+    if avg_roi < 0:
+        adjusted_score = min(adjusted_score, 3)
+        if avg_roi < -10:
+            adjusted_score = min(adjusted_score, 2)
+    
+    # Penalize for negative ROE
+    avg_roe = (roe_conservative + roe_optimistic) / 2
+    if avg_roe < 0:
+        adjusted_score = min(adjusted_score, 3)
+        if avg_roe < -5:
+            adjusted_score = min(adjusted_score, 2)
+    
+    # Multiple negative metrics = very low score
+    negative_count = sum([
+        1 if annual_net_cashflow < 0 else 0,
+        1 if avg_roi < 0 else 0,
+        1 if avg_roe < 0 else 0
+    ])
+    if negative_count >= 2:
+        adjusted_score = min(adjusted_score, 2)
+    if negative_count == 3:
+        adjusted_score = 1
+    
     return InvestmentMetrics(
-        investment_score=int(investment_score),
+        investment_score=int(adjusted_score),
         roi_range_min=round(roi_conservative, 1),
         roi_range_max=round(roi_optimistic, 1),
         roe_range_min=round(roe_conservative, 1),
