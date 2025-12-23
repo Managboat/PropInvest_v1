@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,26 +6,26 @@
 
 @layer base {
   :root {
-    --background: 245 242 235;
-    --foreground: 26 60 52;
-    --card: 0 0% 100%;
-    --card-foreground: 26 60 52;
-    --popover: 0 0% 100%;
-    --popover-foreground: 26 60 52;
-    --primary: 26 60 52;
+    --background: 249 250 251;
+    --foreground: 15 23 42;
+    --card: 255 255 255;
+    --card-foreground: 15 23 42;
+    --popover: 255 255 255;
+    --popover-foreground: 15 23 42;
+    --primary: 30 58 138;
     --primary-foreground: 255 255 255;
-    --secondary: 200 121 97;
-    --secondary-foreground: 26 60 52;
-    --accent: 212 242 56;
-    --accent-foreground: 26 60 52;
+    --secondary: 71 85 105;
+    --secondary-foreground: 255 255 255;
+    --accent: 59 130 246;
+    --accent-foreground: 255 255 255;
     --muted: 148 163 184;
-    --muted-foreground: 92 107 103;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 26 60 52 / 0.05;
-    --input: 26 60 52 / 0.1;
-    --ring: 26 60 52;
-    --radius: 1rem;
+    --muted-foreground: 100 116 139;
+    --destructive: 239 68 68;
+    --destructive-foreground: 255 255 255;
+    --border: 226 232 240;
+    --input: 226 232 240;
+    --ring: 59 130 246;
+    --radius: 0.75rem;
   }
 }
 
@@ -35,41 +35,18 @@
   }
   
   body {
-    @apply bg-[#F5F2EB] text-[#1A3C34] font-sans;
-    font-family: 'Manrope', sans-serif;
+    @apply bg-gray-50 text-slate-900 font-sans;
+    font-family: 'Inter', sans-serif;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
   }
   
   code, pre, .font-mono {
     font-family: 'JetBrains Mono', monospace;
   }
-}
-
-/* Noise texture */
-.noise-texture {
-  position: relative;
-}
-
-.noise-texture::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* Grid pattern */
-.grid-pattern {
-  background-image: linear-gradient(to right, #80808012 1px, transparent 1px),
-    linear-gradient(to bottom, #80808012 1px, transparent 1px);
-  background-size: 24px 24px;
 }
 
 /* Custom scrollbar */
@@ -79,14 +56,14 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #F5F2EB;
+  background: #f1f5f9;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1A3C34;
+  background: #94a3b8;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #142E28;
+  background: #64748b;
 }

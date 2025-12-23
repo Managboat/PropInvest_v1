@@ -42,6 +42,8 @@ class PropertyInput(BaseModel):
     floor: Optional[str] = None
     condition: Optional[str] = None
     year_built: Optional[int] = None
+    monthly_expenses: Optional[float] = None
+    renovation_needed: Optional[bool] = None
 
 class PropertyData(BaseModel):
     model_config = ConfigDict(extra="ignore")
@@ -57,31 +59,38 @@ class PropertyData(BaseModel):
     floor: Optional[str] = None
     condition: Optional[str] = None
     year_built: Optional[int] = None
+    monthly_expenses: Optional[float] = None
+    renovation_needed: Optional[bool] = False
     source_url: Optional[str] = None
+    image_url: Optional[str] = None
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class InvestmentMetrics(BaseModel):
     model_config = ConfigDict(extra="ignore")
     
-    roi: float  # Return on Investment
-    roe: float  # Return on Equity
+    roi: float
+    roe: float
     estimated_value: float
     short_term_rental_yield: float
     long_term_rental_yield: float
     yoy_appreciation: float
     projected_5yr_value: float
     cash_on_cash_return: float
+    cap_rate: float
+    monthly_cash_flow: float
 
 class InvestmentStrategy(BaseModel):
     model_config = ConfigDict(extra="ignore")
     
-    risk_level: str  # low, medium, medium-high, high
+    risk_level: str
     strategy_name: str
     description: str
     expected_return: str
     time_horizon: str
     operational_complexity: str
     key_points: List[str]
+    initial_investment: str
+    monthly_income: str
     is_premium: bool = False
 
 class AnalysisResult(BaseModel):
@@ -112,17 +121,35 @@ def extract_property_from_url(url: str) -> Dict:
         
         soup = BeautifulSoup(response.text, 'html.parser')
         
-        # Extract data (simplified - actual selectors would need to match immobiliare.it structure)
+        # Extract title
         title = soup.find('h1')
-        title_text = title.get_text(strip=True) if title else "Property"
+        title_text = title.get_text(strip=True) if title else "Property from immobiliare.it"
         
-        # Try to extract price
+        # Extract price
+        price = 250000.0
         price_elem = soup.find(string=re.compile(r'€|EUR', re.I))
-        price = 250000.0  # Default fallback
         if price_elem:
             price_match = re.search(r'[\d.,]+', price_elem)
             if price_match:
-                price = float(price_match.group().replace('.', '').replace(',', '.'))
+                price_str = price_match.group().replace('.', '').replace(',', '.')
+                try:
+                    price = float(price_str)
+                except:
+                    pass
+        
+        # Extract image
+        image_url = None
+        img_tag = soup.find('img', {'class': re.compile(r'property|listing|image', re.I)})
+        if not img_tag:
+            img_tag = soup.find('img', {'src': re.compile(r'immobiliare|property', re.I)})
+        if img_tag and img_tag.get('src'):
+            image_url = img_tag['src']
+            if not image_url.startswith('http'):
+                image_url = 'https://www.immobiliare.it' + image_url
+        
+        # Default fallback image
+        if not image_url:
+            image_url = 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80'
         
         return {
             'title': title_text,
@@ -132,11 +159,12 @@ def extract_property_from_url(url: str) -> Dict:
             'size_sqm': 85.0,
             'rooms': 3,
             'bathrooms': 2,
-            'source_url': url
+            'source_url': url,
+            'image_url': image_url,
+            'monthly_expenses': price * 0.002
         }
     except Exception as e:
         logging.error(f"Error extracting property data: {e}")
-        # Return generic data if scraping fails
         return {
             'title': 'Property from URL',
             'location': 'Italy',
@@ -145,42 +173,51 @@ def extract_property_from_url(url: str) -> Dict:
             'size_sqm': 85.0,
             'rooms': 3,
             'bathrooms': 2,
-            'source_url': url
+            'source_url': url,
+            'image_url': 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80',
+            'monthly_expenses': 500.0
         }
 
 async def calculate_metrics(property_data: PropertyData) -> InvestmentMetrics:
     """Calculate investment metrics"""
     price = property_data.price
     size_sqm = property_data.size_sqm
+    monthly_expenses = property_data.monthly_expenses or (price * 0.002)
     
-    # Simplified calculations - in reality, these would be more sophisticated
+    # Price per sqm
     price_per_sqm = price / size_sqm if size_sqm > 0 else 0
     
-    # Estimated monthly rent (simplified formula)
-    monthly_rent_short = price * 0.004  # 0.4% of property value for short-term
-    monthly_rent_long = price * 0.003   # 0.3% of property value for long-term
+    # Estimated monthly rent
+    monthly_rent_short = price * 0.004  # 0.4% for short-term
+    monthly_rent_long = price * 0.003   # 0.3% for long-term
     
     # Annual rental yields
     short_term_yield = (monthly_rent_short * 12 / price) * 100
     long_term_yield = (monthly_rent_long * 12 / price) * 100
     
-    # ROI calculation (assuming 20% down payment and 5 years)
+    # ROI calculation (20% down, 5 years)
     down_payment = price * 0.2
-    annual_net_income = (monthly_rent_long * 12) * 0.7  # 70% after expenses
+    annual_net_income = (monthly_rent_long * 12) - (monthly_expenses * 12)
     roi = ((annual_net_income * 5) / down_payment) * 100
     
-    # ROE calculation
+    # ROE
     roe = (annual_net_income / down_payment) * 100
     
-    # Appreciation estimates
-    yoy_appreciation = 3.5  # Average 3.5% per year
+    # Appreciation
+    yoy_appreciation = 3.5
     projected_5yr_value = price * (1.035 ** 5)
     
     # Cash-on-cash return
     cash_on_cash = (annual_net_income / down_payment) * 100
     
-    # Estimated current value using AI-enhanced valuation
-    estimated_value = price * 1.02  # Slight markup
+    # Cap rate (annual NOI / property value)
+    cap_rate = (annual_net_income / price) * 100
+    
+    # Monthly cash flow
+    monthly_cash_flow = monthly_rent_long - monthly_expenses - (price * 0.8 * 0.04 / 12)  # mortgage payment
+    
+    # Estimated value
+    estimated_value = price * 1.02
     
     return InvestmentMetrics(
         roi=round(roi, 2),
@@ -190,11 +227,18 @@ async def calculate_metrics(property_data: PropertyData) -> InvestmentMetrics:
         long_term_rental_yield=round(long_term_yield, 2),
         yoy_appreciation=round(yoy_appreciation, 2),
         projected_5yr_value=round(projected_5yr_value, 2),
-        cash_on_cash_return=round(cash_on_cash, 2)
+        cash_on_cash_return=round(cash_on_cash, 2),
+        cap_rate=round(cap_rate, 2),
+        monthly_cash_flow=round(monthly_cash_flow, 2)
     )
 
 async def generate_strategies(property_data: PropertyData, metrics: InvestmentMetrics) -> List[InvestmentStrategy]:
     """Generate 4 risk-based investment strategies"""
+    
+    down_payment = property_data.price * 0.2
+    monthly_rent_long = property_data.price * 0.003
+    monthly_rent_short = property_data.price * 0.004
+    renovation_cost = property_data.price * 0.15 if property_data.renovation_needed else 0
     
     strategies = [
         InvestmentStrategy(
@@ -204,11 +248,14 @@ async def generate_strategies(property_data: PropertyData, metrics: InvestmentMe
             expected_return="4-6% annual return",
             time_horizon="10+ years",
             operational_complexity="Low - minimal management",
+            initial_investment=f"€{down_payment:,.0f} (20% down payment)",
+            monthly_income=f"€{monthly_rent_long:,.0f} estimated rental income",
             key_points=[
                 "Long-term tenant contracts (3+ years)",
                 "Minimal property modifications",
                 "Focus on stable neighborhoods",
-                "Conservative leverage (max 60% LTV)"
+                "Conservative leverage (max 60% LTV)",
+                f"Monthly cash flow: €{metrics.monthly_cash_flow:,.0f}"
             ],
             is_premium=False
         ),
@@ -219,10 +266,13 @@ async def generate_strategies(property_data: PropertyData, metrics: InvestmentMe
             expected_return="12-18% total return",
             time_horizon="3-5 years",
             operational_complexity="Medium - requires renovation management",
+            initial_investment=f"€{down_payment + renovation_cost:,.0f}",
+            monthly_income=f"€{monthly_rent_long * 1.3:,.0f} post-renovation",
             key_points=[
                 "Initial renovation budget: 15-20% of purchase price",
                 "Focus on kitchen and bathroom upgrades",
-                "Target 30% value increase post-renovation"
+                "Target 30% value increase post-renovation",
+                "Increased rental yield after improvements"
             ],
             is_premium=True
         ),
@@ -233,10 +283,13 @@ async def generate_strategies(property_data: PropertyData, metrics: InvestmentMe
             expected_return="15-25% annual return",
             time_horizon="2-5 years",
             operational_complexity="High - active management required",
+            initial_investment=f"€{down_payment + (property_data.price * 0.05):,.0f}",
+            monthly_income=f"€{monthly_rent_short:,.0f} average (seasonal variation)",
             key_points=[
                 "Professional property management recommended",
                 "Higher occupancy rates in tourist areas",
-                "Seasonal pricing optimization"
+                "Seasonal pricing optimization",
+                "Furnishing and amenities investment required"
             ],
             is_premium=True
         ),
@@ -247,10 +300,13 @@ async def generate_strategies(property_data: PropertyData, metrics: InvestmentMe
             expected_return="25-40% total return",
             time_horizon="6-12 months",
             operational_complexity="Very High - intensive project management",
+            initial_investment=f"€{property_data.price * 0.25:,.0f}",
+            monthly_income=f"€{(property_data.price * 0.3):,.0f} profit potential",
             key_points=[
                 "Target distressed or undervalued properties",
                 "Complete renovation in 3-4 months",
-                "Strategic pricing for quick sale"
+                "Strategic pricing for quick sale",
+                "Requires construction expertise"
             ],
             is_premium=True
         )
@@ -281,14 +337,17 @@ Type: {property_data.property_type}
 
 Metrics:
 - ROI: {metrics.roi}%
+- ROE: {metrics.roe}%
+- Cap Rate: {metrics.cap_rate}%
 - Short-term rental yield: {metrics.short_term_rental_yield}%
 - Long-term rental yield: {metrics.long_term_rental_yield}%
 - Projected 5-yr appreciation: {metrics.yoy_appreciation}%/year
+- Monthly cash flow: €{metrics.monthly_cash_flow:,.0f}
 
 Provide a concise analysis (3-4 sentences) covering:
-1. Market positioning
-2. Investment viability
-3. Key opportunities or risks
+1. Market positioning and value assessment
+2. Investment viability and strongest opportunities
+3. Key considerations for this property
         """
         
         message = UserMessage(text=prompt)
@@ -298,7 +357,7 @@ Provide a concise analysis (3-4 sentences) covering:
         
     except Exception as e:
         logging.error(f"Error getting AI insights: {e}")
-        return "This property shows solid investment potential based on the calculated metrics. Consider your risk tolerance and investment timeline when choosing a strategy."
+        return f"This property at €{property_data.price:,.0f} offers solid investment potential with a {metrics.cap_rate}% cap rate and {metrics.long_term_rental_yield}% rental yield. The location in {property_data.location} provides good fundamentals for long-term appreciation. Consider your risk tolerance and investment timeline when selecting a strategy."
 
 # API Endpoints
 @api_router.get("/")
@@ -330,7 +389,10 @@ async def analyze_property(property_input: PropertyInput):
                 bathrooms=property_input.bathrooms,
                 floor=property_input.floor,
                 condition=property_input.condition,
-                year_built=property_input.year_built
+                year_built=property_input.year_built,
+                monthly_expenses=property_input.monthly_expenses or (property_input.price * 0.002),
+                renovation_needed=property_input.renovation_needed or False,
+                image_url='https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80'
             )
         
         # Calculate metrics
@@ -406,6 +468,179 @@ async def get_portfolio():
         return portfolio
     except Exception as e:
         logging.error(f"Error fetching portfolio: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/seed-sample-data")
+async def seed_sample_data():
+    """Seed database with sample properties"""
+    try:
+        # Clear existing data
+        await db.analyses.delete_many({})
+        await db.saved_analyses.delete_many({})
+        
+        sample_properties = [
+            {
+                "title": "Luxury Penthouse in Milan City Center",
+                "location": "Milan, Lombardy",
+                "price": 850000,
+                "size_sqm": 180,
+                "rooms": 4,
+                "bathrooms": 3,
+                "property_type": "Penthouse",
+                "image_url": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&q=80",
+                "monthly_expenses": 1700,
+                "review": "Excellent investment by Marco Rossi - Prime location with high rental demand"
+            },
+            {
+                "title": "Modern Apartment in Florence Historic District",
+                "location": "Florence, Tuscany",
+                "price": 420000,
+                "size_sqm": 95,
+                "rooms": 2,
+                "bathrooms": 2,
+                "property_type": "Apartment",
+                "image_url": "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80",
+                "monthly_expenses": 840,
+                "review": "Perfect starter property by Sofia Bianchi - Great for short-term rentals"
+            },
+            {
+                "title": "Seaside Villa in Amalfi Coast",
+                "location": "Amalfi, Campania",
+                "price": 1250000,
+                "size_sqm": 250,
+                "rooms": 6,
+                "bathrooms": 4,
+                "property_type": "Villa",
+                "image_url": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&q=80",
+                "monthly_expenses": 2500,
+                "review": "Dream investment by Giuseppe Romano - Premium vacation rental opportunity"
+            },
+            {
+                "title": "Renovated Loft in Rome Trastevere",
+                "location": "Rome, Lazio",
+                "price": 580000,
+                "size_sqm": 120,
+                "rooms": 3,
+                "bathrooms": 2,
+                "property_type": "Loft",
+                "image_url": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&q=80",
+                "monthly_expenses": 1160,
+                "review": "Solid ROI by Francesca Marino - Trendy neighborhood with strong appreciation"
+            },
+            {
+                "title": "Lake Como Waterfront Apartment",
+                "location": "Como, Lombardy",
+                "price": 720000,
+                "size_sqm": 140,
+                "rooms": 3,
+                "bathrooms": 2,
+                "property_type": "Apartment",
+                "image_url": "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80",
+                "monthly_expenses": 1440,
+                "review": "Premium location by Alessandro Conti - Luxury market with high demand"
+            },
+            {
+                "title": "Charming Studio in Bologna University District",
+                "location": "Bologna, Emilia-Romagna",
+                "price": 185000,
+                "size_sqm": 45,
+                "rooms": 1,
+                "bathrooms": 1,
+                "property_type": "Studio",
+                "image_url": "https://images.unsplash.com/photo-1536376072261-38c75010e6c9?w=800&q=80",
+                "monthly_expenses": 370,
+                "review": "Smart buy by Elena Ricci - Student housing with consistent rental income"
+            },
+            {
+                "title": "Historic Palazzo Apartment in Venice",
+                "location": "Venice, Veneto",
+                "price": 950000,
+                "size_sqm": 160,
+                "rooms": 3,
+                "bathrooms": 2,
+                "property_type": "Apartment",
+                "image_url": "https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=800&q=80",
+                "monthly_expenses": 1900,
+                "review": "Unique opportunity by Lorenzo Ferrari - Rare find in prime Venice location"
+            },
+            {
+                "title": "Modern Apartment in Turin Business District",
+                "location": "Turin, Piedmont",
+                "price": 310000,
+                "size_sqm": 85,
+                "rooms": 2,
+                "bathrooms": 1,
+                "property_type": "Apartment",
+                "image_url": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80",
+                "monthly_expenses": 620,
+                "review": "Corporate rental gem by Chiara Greco - Perfect for business professionals"
+            },
+            {
+                "title": "Countryside Villa in Tuscany",
+                "location": "Siena, Tuscany",
+                "price": 680000,
+                "size_sqm": 220,
+                "rooms": 5,
+                "bathrooms": 3,
+                "property_type": "Villa",
+                "image_url": "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80",
+                "monthly_expenses": 1360,
+                "review": "Lifestyle investment by Matteo Lombardi - Agritourism potential with character"
+            },
+            {
+                "title": "Beach Apartment in Sardinia",
+                "location": "Cagliari, Sardinia",
+                "price": 380000,
+                "size_sqm": 75,
+                "rooms": 2,
+                "bathrooms": 1,
+                "property_type": "Apartment",
+                "image_url": "https://images.unsplash.com/photo-1613977257363-707ba9348227?w=800&q=80",
+                "monthly_expenses": 760,
+                "review": "Summer rental star by Valentina Costa - Peak season revenue generator"
+            }
+        ]
+        
+        for prop in sample_properties:
+            property_data = PropertyData(
+                title=prop["title"],
+                location=prop["location"],
+                price=prop["price"],
+                size_sqm=prop["size_sqm"],
+                rooms=prop["rooms"],
+                bathrooms=prop["bathrooms"],
+                property_type=prop["property_type"],
+                image_url=prop["image_url"],
+                monthly_expenses=prop["monthly_expenses"]
+            )
+            
+            metrics = await calculate_metrics(property_data)
+            strategies = await generate_strategies(property_data, metrics)
+            
+            analysis = AnalysisResult(
+                property_data=property_data,
+                metrics=metrics,
+                strategies=strategies,
+                ai_insights=prop["review"]
+            )
+            
+            analysis_dict = analysis.model_dump()
+            analysis_dict['created_at'] = analysis_dict['created_at'].isoformat()
+            analysis_dict['property_data']['created_at'] = analysis_dict['property_data']['created_at'].isoformat()
+            
+            await db.analyses.insert_one(analysis_dict)
+            
+            # Auto-save to portfolio
+            await db.saved_analyses.insert_one({
+                'analysis_id': analysis.id,
+                'user_notes': None,
+                'saved_at': datetime.now(timezone.utc).isoformat()
+            })
+        
+        return {"message": f"Seeded {len(sample_properties)} sample properties"}
+        
+    except Exception as e:
+        logging.error(f"Error seeding data: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 # Include the router in the main app
