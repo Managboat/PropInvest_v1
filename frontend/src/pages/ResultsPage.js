@@ -1,20 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Save, Building2, MapPin, Home, TrendingUp, Euro, Calendar } from 'lucide-react';
+import { ArrowLeft, Building2, MapPin, Home, TrendingUp, Euro, Calendar } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
-import { toast } from 'sonner';
-import axios from 'axios';
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
 
 const ResultsPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [saving, setSaving] = useState(false);
   
   const analysis = location.state?.analysis;
 
@@ -24,21 +18,6 @@ const ResultsPage = () => {
   }
 
   const { property_data, metrics, strategies, ai_insights } = analysis;
-
-  const handleSaveAnalysis = async () => {
-    setSaving(true);
-    try {
-      await axios.post(`${API}/save-analysis`, {
-        analysis_id: analysis.id
-      });
-      toast.success('Analysis saved to portfolio!');
-    } catch (error) {
-      console.error('Save error:', error);
-      toast.error('Failed to save analysis');
-    } finally {
-      setSaving(false);
-    }
-  };
 
   const getRiskColor = (risk) => {
     switch (risk) {
