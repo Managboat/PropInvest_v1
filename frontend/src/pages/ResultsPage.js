@@ -213,8 +213,8 @@ const ResultsPage = () => {
           transition={{ delay: 0.2 }}
         >
           <div className="mb-6">
-            <h2 className="text-3xl font-bold text-slate-900 mb-2">Financial Analysis</h2>
-            <p className="text-slate-600">Key metrics based on your purchase configuration</p>
+            <h2 className="text-3xl font-bold text-slate-900 mb-2">Analisi Finanziaria</h2>
+            <p className="text-slate-600">Metriche chiave basate sulla tua configurazione di acquisto</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
