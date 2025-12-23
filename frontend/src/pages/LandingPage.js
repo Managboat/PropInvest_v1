@@ -1,20 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { TrendingUp, BarChart3, Shield, Sparkles, ArrowRight, Building2 } from 'lucide-react';
 import { Button } from '../components/ui/button';
-import axios from 'axios';
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
 
 const LandingPage = () => {
   const navigate = useNavigate();
-
-  useEffect(() => {
-    // Seed sample data on mount
-    axios.post(`${API}/seed-sample-data`).catch(err => console.log('Sample data already seeded'));
-  }, []);
 
   const features = [
     {
