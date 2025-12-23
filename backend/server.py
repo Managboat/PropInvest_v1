@@ -229,7 +229,98 @@ async def calculate_metrics_with_ai(property_data: PropertyData, purchase_detail
     # Use AI to estimate realistic rental income and returns
     try:
         api_key = os.environ.get('EMERGENT_LLM_KEY')
-        session_id = f\"metrics_{property_data.id}\"\n        \n        chat = LlmChat(\n            api_key=api_key,\n            session_id=session_id,\n            system_message=\"You are a real estate investment analyst specializing in Italian properties. Provide realistic, data-driven estimates.\"\n        ).with_model(\"openai\", \"gpt-5.2\")\n        \n        prompt = f\"\"\"\nAnalyze this Italian property investment and provide realistic estimates:\n\nProperty Details:\n- Location: {location}\n- Type: {property_type}\n- Price: €{price:,.0f}\n- Size: {size_sqm} sqm\n- Price per sqm: €{price/size_sqm:.0f}\n\nFinancing:\n- Total upfront investment: €{total_upfront:,.0f}\n- Annual costs (mortgage+tax+maintenance): €{annual_costs:,.0f}\n- Mortgage: {purchase_details.mortgage_percentage}% at {purchase_details.mortgage_rate}%\n- First home: {purchase_details.is_first_home}\n\nProvide ONLY numbers in this exact JSON format:\n{{\n  \"monthly_rent_conservative\": <number>,\n  \"monthly_rent_optimistic\": <number>,\n  \"investment_score\": <1-10>,\n  \"yoy_appreciation\": <percentage>,\n  \"estimated_current_value\": <number>\n}}\n\nConsider:\n- Actual market rental rates for {location}\n- Property type and size\n- Current Italian real estate market conditions\n- Location desirability and demand\n- Price competitiveness vs market\n\"\"\"\n        \n        message = UserMessage(text=prompt)\n        response = await chat.send_message(message)\n        \n        # Parse AI response\n        import json\n        ai_data = json.loads(response)\n        \n        monthly_rent_conservative = ai_data.get('monthly_rent_conservative', price * 0.003)\n        monthly_rent_optimistic = ai_data.get('monthly_rent_optimistic', price * 0.004)\n        investment_score = ai_data.get('investment_score', 5)\n        yoy_appreciation = ai_data.get('yoy_appreciation', 3.5)\n        estimated_value = ai_data.get('estimated_current_value', price * 1.02)\n        \n    except Exception as e:\n        logging.error(f\"AI metrics calculation failed: {e}, using defaults\")\n        # Fallback to reasonable defaults\n        monthly_rent_conservative = price * 0.003  # 0.3%\n        monthly_rent_optimistic = price * 0.004    # 0.4%\n        investment_score = 6\n        yoy_appreciation = 3.5\n        estimated_value = price * 1.02\n    \n    # Calculate returns based on AI rental estimates\n    annual_rent_conservative = monthly_rent_conservative * 12\n    annual_rent_optimistic = monthly_rent_optimistic * 12\n    \n    annual_net_cashflow_conservative = annual_rent_conservative - annual_costs\n    annual_net_cashflow_optimistic = annual_rent_optimistic - annual_costs\n    annual_net_cashflow = (annual_net_cashflow_conservative + annual_net_cashflow_optimistic) / 2\n    \n    # ROI range (5 years)\n    roi_conservative = ((annual_net_cashflow_conservative * 5) / total_upfront) * 100\n    roi_optimistic = ((annual_net_cashflow_optimistic * 5) / total_upfront) * 100\n    \n    # ROE range  \n    roe_conservative = (annual_net_cashflow_conservative / total_upfront) * 100\n    roe_optimistic = (annual_net_cashflow_optimistic / total_upfront) * 100\n    \n    # 5-year projection\n    projected_5yr_value = price * ((1 + yoy_appreciation/100) ** 5)\n    \n    return InvestmentMetrics(\n        investment_score=int(investment_score),\n        roi_range_min=round(roi_conservative, 1),\n        roi_range_max=round(roi_optimistic, 1),\n        roe_range_min=round(roe_conservative, 1),\n        roe_range_max=round(roe_optimistic, 1),\n        annual_net_cashflow=round(annual_net_cashflow, 0),\n        estimated_value=round(estimated_value, 2),\n        yoy_appreciation=round(yoy_appreciation, 2),\n        projected_5yr_value=round(projected_5yr_value, 2),
+        session_id = f"metrics_{property_data.id}"
+        
+        chat = LlmChat(
+            api_key=api_key,
+            session_id=session_id,
+            system_message="You are a real estate investment analyst specializing in Italian properties. Provide realistic, data-driven estimates."
+        ).with_model("openai", "gpt-5.2")
+        
+        prompt = f"""
+Analyze this Italian property investment and provide realistic estimates:
+
+Property Details:
+- Location: {location}
+- Type: {property_type}
+- Price: €{price:,.0f}
+- Size: {size_sqm} sqm
+- Price per sqm: €{price/size_sqm:.0f}
+
+Financing:
+- Total upfront investment: €{total_upfront:,.0f}
+- Annual costs (mortgage+tax+maintenance): €{annual_costs:,.0f}
+- Mortgage: {purchase_details.mortgage_percentage}% at {purchase_details.mortgage_rate}%
+- First home: {purchase_details.is_first_home}
+
+Provide ONLY numbers in this exact JSON format:
+{{
+  "monthly_rent_conservative": <number>,
+  "monthly_rent_optimistic": <number>,
+  "investment_score": <1-10>,
+  "yoy_appreciation": <percentage>,
+  "estimated_current_value": <number>
+}}
+
+Consider:
+- Actual market rental rates for {location}
+- Property type and size
+- Current Italian real estate market conditions
+- Location desirability and demand
+- Price competitiveness vs market
+"""
+        
+        message = UserMessage(text=prompt)
+        response = await chat.send_message(message)
+        
+        # Parse AI response
+        import json
+        ai_data = json.loads(response)
+        
+        monthly_rent_conservative = ai_data.get('monthly_rent_conservative', price * 0.003)
+        monthly_rent_optimistic = ai_data.get('monthly_rent_optimistic', price * 0.004)
+        investment_score = ai_data.get('investment_score', 5)
+        yoy_appreciation = ai_data.get('yoy_appreciation', 3.5)
+        estimated_value = ai_data.get('estimated_current_value', price * 1.02)
+        
+    except Exception as e:
+        logging.error(f"AI metrics calculation failed: {e}, using defaults")
+        # Fallback to reasonable defaults
+        monthly_rent_conservative = price * 0.003  # 0.3%
+        monthly_rent_optimistic = price * 0.004    # 0.4%
+        investment_score = 6
+        yoy_appreciation = 3.5
+        estimated_value = price * 1.02
+    
+    # Calculate returns based on AI rental estimates
+    annual_rent_conservative = monthly_rent_conservative * 12
+    annual_rent_optimistic = monthly_rent_optimistic * 12
+    
+    annual_net_cashflow_conservative = annual_rent_conservative - annual_costs
+    annual_net_cashflow_optimistic = annual_rent_optimistic - annual_costs
+    annual_net_cashflow = (annual_net_cashflow_conservative + annual_net_cashflow_optimistic) / 2
+    
+    # ROI range (5 years)
+    roi_conservative = ((annual_net_cashflow_conservative * 5) / total_upfront) * 100
+    roi_optimistic = ((annual_net_cashflow_optimistic * 5) / total_upfront) * 100
+    
+    # ROE range  
+    roe_conservative = (annual_net_cashflow_conservative / total_upfront) * 100
+    roe_optimistic = (annual_net_cashflow_optimistic / total_upfront) * 100
+    
+    # 5-year projection
+    projected_5yr_value = price * ((1 + yoy_appreciation/100) ** 5)
+    
+    return InvestmentMetrics(
+        investment_score=int(investment_score),
+        roi_range_min=round(roi_conservative, 1),
+        roi_range_max=round(roi_optimistic, 1),
+        roe_range_min=round(roe_conservative, 1),
+        roe_range_max=round(roe_optimistic, 1),
+        annual_net_cashflow=round(annual_net_cashflow, 0),
+        estimated_value=round(estimated_value, 2),
+        yoy_appreciation=round(yoy_appreciation, 2),
+        projected_5yr_value=round(projected_5yr_value, 2),
         # Backward compatibility
         roi=round((roi_conservative + roi_optimistic) / 2, 2),
         roe=round((roe_conservative + roe_optimistic) / 2, 2),
