@@ -792,13 +792,6 @@ async def seed_sample_data():
     except Exception as e:
         logging.error(f"Error seeding data: {e}")
         raise HTTPException(status_code=500, detail=str(e))
-            })
-        
-        return {"message": f"Seeded {len(sample_properties)} diversified properties across 4 strategies"}
-        
-    except Exception as e:
-        logging.error(f"Error seeding data: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
 
 # Include the router in the main app
                 "location": "Milan, Lombardy",
