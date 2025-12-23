@@ -230,7 +230,7 @@ const PricingPage = () => {
                 <CardTitle className="text-lg">Come funziona il pricing Executive?</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-slate-600">Executive è il 2-4% del valore totale dell'investimento, basato su portata e complessità del progetto. Contattaci per un preventivo personalizzato.</p>
+                <p className="text-slate-600">Executive è il 2-4% del valore totale dell&apos;investimento, basato su portata e complessità del progetto. Contattaci per un preventivo personalizzato.</p>
               </CardContent>
             </Card>
           </div>
