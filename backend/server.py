@@ -485,46 +485,6 @@ async def analyze_property(property_input: PropertyInput):
     except Exception as e:
         logging.error(f"Error analyzing property: {e}")
         raise HTTPException(status_code=500, detail=str(e))
-                bathrooms=property_input.bathrooms,
-                floor=property_input.floor,
-                condition=property_input.condition,
-                year_built=property_input.year_built,
-                monthly_expenses=property_input.monthly_expenses or (property_input.price * 0.002),
-                renovation_needed=property_input.renovation_needed or False,
-                image_url='https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80'
-            )
-        
-        # Calculate metrics
-        metrics = await calculate_metrics(property_data)
-        
-        # Generate strategies
-        strategies = await generate_strategies(property_data, metrics)
-        
-        # Get AI insights
-        ai_insights = await get_ai_insights(property_data, metrics)
-        
-        # Create analysis result
-        analysis = AnalysisResult(
-            property_data=property_data,
-            metrics=metrics,
-            strategies=strategies,
-            ai_insights=ai_insights
-        )
-        
-        # Save to database
-        analysis_dict = analysis.model_dump()
-        analysis_dict['created_at'] = analysis_dict['created_at'].isoformat()
-        analysis_dict['property_data']['created_at'] = analysis_dict['property_data']['created_at'].isoformat()
-        
-        await db.analyses.insert_one(analysis_dict)
-        
-        return analysis
-        
-    except HTTPException:
-        raise
-    except Exception as e:
-        logging.error(f"Error analyzing property: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.post("/save-analysis")
 async def save_analysis(saved: SavedAnalysis):
