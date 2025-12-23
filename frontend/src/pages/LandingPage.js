@@ -101,11 +101,11 @@ const LandingPage = () => {
               
               <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] text-slate-900">
                 Scopri Quanto Guadagnare
-                <span className="block text-blue-900 mt-2">Con Il Tuo Investimento</span>
+                <span className="block text-blue-900 mt-2">Con Il Tuo Investimento Immobiliare</span>
               </h1>
               
               <p className="text-base md:text-lg leading-relaxed text-slate-600 max-w-xl">
-                Analisi professionale AI-powered per investimenti immobiliari in Italia. ROI, cash flow e strategie personalizzate in pochi minuti.
+                Strategie di investimento personalizzate in pochi minuti grazie ad AI generativa, con indicazioni su ricavi e modelli di business.
               </p>
             </div>
 
