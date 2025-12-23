@@ -65,15 +65,6 @@ const ResultsPage = () => {
                 Nuova Analisi
               </Button>
             </div>
-            <Button
-              data-testid="save-analysis-button"
-              onClick={handleSaveAnalysis}
-              disabled={saving}
-              className="bg-blue-900 text-white hover:bg-blue-800"
-            >
-              <Save className="w-4 h-4 mr-2" />
-              Salva in Portfolio
-            </Button>
           </div>
         </div>
       </nav>
