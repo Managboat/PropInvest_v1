@@ -50,7 +50,7 @@ const PortfolioPage = () => {
                 className="text-slate-600 hover:text-slate-900"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Home
+                Indietro
               </Button>
             </div>
             <Button
@@ -58,7 +58,7 @@ const PortfolioPage = () => {
               onClick={() => navigate('/analyze')}
               className="bg-blue-900 text-white hover:bg-blue-800"
             >
-              New Analysis
+              Nuova Analisi
             </Button>
           </div>
         </div>
@@ -72,10 +72,10 @@ const PortfolioPage = () => {
         >
           <div>
             <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-3">
-              Your Portfolio
+              Il Tuo Portfolio
             </h1>
             <p className="text-lg text-slate-600">
-              {portfolio.length} {portfolio.length === 1 ? 'property' : 'properties'} analyzed
+              {portfolio.length} {portfolio.length === 1 ? 'proprietà analizzata' : 'proprietà analizzate'}
             </p>
           </div>
 
@@ -87,16 +87,16 @@ const PortfolioPage = () => {
             <Card data-testid="empty-portfolio" className="border-gray-200 text-center py-20">
               <CardContent>
                 <Home className="w-16 h-16 mx-auto mb-4 text-slate-400" />
-                <h3 className="text-2xl font-bold text-slate-900 mb-2">No Properties Yet</h3>
+                <h3 className="text-2xl font-bold text-slate-900 mb-2">Nessuna Proprietà</h3>
                 <p className="text-slate-600 mb-6">
-                  Start analyzing properties to build your investment portfolio
+                  Inizia ad analizzare proprietà per costruire il tuo portfolio di investimenti
                 </p>
                 <Button
                   data-testid="start-analyzing-button"
                   onClick={() => navigate('/analyze')}
                   className="bg-blue-900 text-white hover:bg-blue-800 px-8 py-6"
                 >
-                  Analyze Your First Property
+                  Analizza La Tua Prima Proprietà
                 </Button>
               </CardContent>
             </Card>
@@ -141,7 +141,7 @@ const PortfolioPage = () => {
                           <Badge className="bg-slate-100 text-slate-800 border-slate-200 font-semibold">
                             {propertyData.property_type}
                           </Badge>
-                          <span className="text-sm text-slate-500">{propertyData.size_sqm} sqm</span>
+                          <span className="text-sm text-slate-500">{propertyData.size_sqm} mq</span>
                         </div>
                         <CardTitle className="text-lg font-bold line-clamp-2 text-slate-900 group-hover:text-blue-900 transition-colors">
                           {propertyData.title}
@@ -159,7 +159,7 @@ const PortfolioPage = () => {
                             <div className="text-2xl font-bold">{metrics.roi}%</div>
                           </div>
                           <div className="bg-gradient-to-br from-slate-700 to-slate-600 rounded-lg p-3 text-white">
-                            <div className="text-xs text-slate-200 mb-1">Yield</div>
+                            <div className="text-xs text-slate-200 mb-1">Rendimento</div>
                             <div className="text-2xl font-bold">
                               {metrics.long_term_rental_yield}%
                             </div>
@@ -168,7 +168,7 @@ const PortfolioPage = () => {
 
                         <div className="flex items-center gap-2 text-sm text-slate-600 pt-2 border-t border-gray-200">
                           <TrendingUp className="w-4 h-4 text-blue-600" />
-                          <span>{metrics.yoy_appreciation}% annual appreciation</span>
+                          <span>{metrics.yoy_appreciation}% apprezzamento annuale</span>
                         </div>
 
                         {/* Review/AI Insight Preview */}
