@@ -271,8 +271,9 @@ class RealEstateAPITester:
             self.test_root_endpoint,
             self.test_analyze_manual_property,
             self.test_analyze_url_property,
-            self.test_save_analysis,
-            self.test_get_portfolio,
+            self.test_portfolio_endpoint_removed,
+            self.test_seed_sample_data_endpoint_removed,
+            self.test_investment_score_negative_metrics,
             self.test_invalid_requests
         ]
         
