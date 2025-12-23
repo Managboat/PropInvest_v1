@@ -174,7 +174,7 @@ const PortfolioPage = () => {
                         {/* Review/AI Insight Preview */}
                         {analysis.ai_insights && (
                           <div className="bg-blue-50 rounded-lg p-3 text-xs text-slate-700 line-clamp-2 italic">
-                            "{analysis.ai_insights}"
+                            &quot;{analysis.ai_insights}&quot;
                           </div>
                         )}
                       </CardContent>
