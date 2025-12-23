@@ -85,30 +85,37 @@ const LandingPage = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="space-y-6"
+            className="md:col-span-7 space-y-8"
           >
-            <div className="inline-block">
-              <span className="text-xs font-semibold uppercase tracking-wider text-blue-900 bg-blue-50 px-4 py-2 rounded-full">
-                Investment Intelligence
-              </span>
+            <div className="space-y-6">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="inline-block"
+              >
+                <span className="text-xs font-semibold uppercase tracking-wider text-blue-900 bg-blue-50 px-4 py-2 rounded-full">
+                  Analisi AI-Powered
+                </span>
+              </motion.div>
+              
+              <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] text-slate-900">
+                Scopri Quanto Guadagnare
+                <span className="block text-blue-900 mt-2">Con Il Tuo Investimento</span>
+              </h1>
+              
+              <p className="text-base md:text-lg leading-relaxed text-slate-600 max-w-xl">
+                Analisi professionale AI-powered per investimenti immobiliari in Italia. ROI, cash flow e strategie personalizzate in pochi minuti.
+              </p>
             </div>
-            
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-slate-900 leading-tight">
-              Smarter Real Estate
-              <span className="block text-blue-900">Investment Decisions</span>
-            </h1>
-            
-            <p className="text-lg md:text-xl text-slate-600 leading-relaxed">
-              AI-powered property analysis for Italian real estate. Get instant valuations, ROI calculations, and personalized strategies.
-            </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+            <div className="flex flex-col sm:flex-row gap-4">
               <Button
                 data-testid="hero-get-started-button"
                 onClick={() => navigate('/analyze')}
                 className="bg-blue-900 text-white hover:bg-blue-800 rounded-lg px-8 py-6 text-lg font-semibold transition-all hover:shadow-lg"
               >
-                Get Started Free
+                Inizia Analisi Gratuita
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
               
@@ -117,25 +124,30 @@ const LandingPage = () => {
                 onClick={() => navigate('/portfolio')}
                 className="bg-white text-slate-900 border-2 border-gray-300 hover:border-gray-400 rounded-lg px-8 py-6 text-lg font-semibold transition-all"
               >
-                View Portfolio
+                Vedi Portfolio
               </Button>
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-6 pt-8">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6 }}
+              className="grid grid-cols-3 gap-6 pt-8"
+            >
               <div>
-                <div className="text-3xl font-bold text-slate-900">25k+</div>
-                <div className="text-sm text-slate-600">Properties</div>
+                <div className="text-3xl font-mono font-bold text-slate-900">25k+</div>
+                <div className="text-sm text-slate-600">Proprietà</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-slate-900">€1.2B</div>
-                <div className="text-sm text-slate-600">Analyzed</div>
+                <div className="text-3xl font-mono font-bold text-slate-900">€1.2B</div>
+                <div className="text-sm text-slate-600">Analizzati</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-slate-900">98%</div>
-                <div className="text-sm text-slate-600">Accuracy</div>
+                <div className="text-3xl font-mono font-bold text-slate-900">98%</div>
+                <div className="text-sm text-slate-600">Accuratezza</div>
               </div>
-            </div>
+            </motion.div>
           </motion.div>
 
           {/* Right Image */}
@@ -143,14 +155,35 @@ const LandingPage = () => {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
+            className="md:col-span-5"
           >
-            <div className="relative h-[500px] rounded-2xl overflow-hidden shadow-2xl">
+            <div className="relative h-full min-h-[500px] rounded-2xl overflow-hidden shadow-2xl">
               <img
-                src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80"
-                alt="Modern property"
+                src="https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=800&q=80"
+                alt="Luxury property in Italian city"
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-blue-900/40 to-transparent"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent"></div>
+              <div className="absolute bottom-8 left-8 right-8">
+                <div className="bg-white/95 backdrop-blur-sm rounded-xl p-6 shadow-xl">
+                  <div className="text-sm font-semibold text-blue-900 mb-1">INVESTIMENTO ESEMPIO</div>
+                  <div className="text-2xl font-bold text-slate-900 mb-3">Appartamento Centro Roma</div>
+                  <div className="grid grid-cols-3 gap-4 text-center">
+                    <div>
+                      <div className="text-xs text-slate-600">ROI 5 anni</div>
+                      <div className="text-lg font-bold text-blue-900">47%</div>
+                    </div>
+                    <div>
+                      <div className="text-xs text-slate-600">Cash Flow</div>
+                      <div className="text-lg font-bold text-slate-900">€18k/anno</div>
+                    </div>
+                    <div>
+                      <div className="text-xs text-slate-600">Score</div>
+                      <div className="text-lg font-bold text-blue-900">8/10</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </motion.div>
         </div>
